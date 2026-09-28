@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PON Network Optical Link Budget Calculator V2.1</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px 25px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      color: #374151;
+    }
+    
+    .header-buttons {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: #60a5fa;
+      color: #fff;
+    }
+    
+    .btn-primary:hover {
+      background: #3b82f6;
+    }
+    
+    .btn-success {
+      background: #34d399;
+      color: #fff;
+    }
+    
+    .btn-success:hover {
+      background: #10b981;
+    }
+    
+    /* Main Layout */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    @media (max-width: 1024px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    /* Sections */
+    .section {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #fafafa;
+      border-radius: 8px;
+      border-left: 4px solid #60a5fa;
+    }
+    
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 12px;
+    }
+    
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+    
+    .form-group select,
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    
+    .form-group select:focus,
+    .form-group input:focus {
+      outline: none;
+      border-color: #60a5fa;
+    }
+    
+    .form-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .form-inline label {
+      min-width: 140px;
+    }
+    
+    .form-inline input {
+      width: 120px;
+    }
+    
+    .unit {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    /* Loss Display */
+    .loss-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #e0f2fe;
+      color: #0369a1;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    /* Radio Buttons */
+    .radio-group {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    
+    .radio-item input {
+      width: auto;
+    }
+    
+    /* Device Info */
+    .device-info {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f3f4f6;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+    
+    .device-code {
+      margin-top: 5px;
+      font-weight: 600;
+      color: #60a5fa;
+    }
+    
+    /* Buttons */
+    .btn-calc {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-calc:hover {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+    
+    .btn-clear {
+      width: 100%;
+      padding: 12px;
+      background: #fff;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+    
+    .btn-clear:hover {
+      background: #f3f4f6;
+    }
+    
+    /* Results */
+    .total-loss {
+      background: #e0f2fe;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .total-loss-label {
+      font-size: 14px;
+      color: #0369a1;
+      margin-bottom: 5px;
+    }
+    
+    .total-loss-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #0284c7;
+    }
+    
+    /* Loss Details Grid */
+    .loss-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .loss-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: #f9fafb;
+      border-radius: 6px;
+    }
+    
+    .loss-item-label {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    .loss-item-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+    }
+    
+    /* Received Power */
+    .power-section {
+      margin-bottom: 20px;
+    }
+    
+    .power-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    
+    .power-label {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    .power-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #60a5fa;
+    }
+    
+    .power-range {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-left: 8px;
+    }
+    
+    /* Judgment Result */
+    .judgment-box {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .judgment-title {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+    
+    .judgment-result {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+    
+    .judgment-result.pass {
+      color: #059669;
+    }
+    
+    .judgment-result.warning {
+      color: #d97706;
+    }
+    
+    .judgment-result.fail {
+      color: #dc2626;
+    }
+    
+    .judgment-details {
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.8;
+      color: #374151;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .judgment-line {
+      margin-bottom: 4px;
+    }
+    
+    .judgment-line.title {
+      font-weight: 600;
+    }
+    
+    .judgment-line.success {
+      color: #059669;
+    }
+    
+    .judgment-line.warning {
+      color: #d97706;
+    }
+    
+    .judgment-line.fail {
+      color: #dc2626;
+    }
+    
+    /* Reference */
+    .reference {
+      margin-top: 20px;
+      padding: 12px;
+      background: #fffbeb;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #92400e;
+    }
+    
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow: hidden;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .modal-header h2 {
+      font-size: 18px;
+      color: #374151;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #9ca3af;
+      cursor: pointer;
+    }
+    
+    .modal-body {
+      padding: 20px;
+      max-height: calc(90vh - 120px);
+      overflow-y: auto;
+    }
+    
+    .modal-footer {
+      padding: 15px 20px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    /* Module List */
+    .module-list {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .module-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 15px;
+      border-bottom: 1px solid #e5e7eb;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .module-item:last-child {
+      border-bottom: none;
+    }
+    
+    .module-item:hover {
+      background: #f3f4f6;
+    }
+    
+    .module-item.system {
+      color: #9ca3af;
+    }
+    
+    .module-item.user {
+      color: #374151;
+    }
+    
+    .module-name {
+      font-weight: 500;
+    }
+    
+    .module-code {
+      font-size: 12px;
+      color: #60a5fa;
+    }
+    
+    .module-type {
+      font-size: 12px;
+      padding: 2px 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+    
+    /* Form Grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .version {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h1>PON Network Optical Link Budget Calculator<span class="version">V2.1</span></h1>
+      </div>
+      <div class="header-buttons">
+        <button class="btn btn-primary" onclick="openOLTManager()">OLT Module Manager</button>
+        <button class="btn btn-success" onclick="openONUManager()">ONU Device Manager</button>
+      </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Input Panel -->
+      <div class="card">
+        <div class="card-title">Parameter Settings</div>
+        
+        <!-- Network Type -->
+        <div class="section">
+          <div class="section-title">1. Select Network Type</div>
+          <div class="form-group">
+            <div class="form-inline">
+              <label>Network Type:</label>
+              <select id="networkType" onchange="onNetworkTypeChange()">
+                <option value="XGSPON">XGSPON</option>
+                <option value="XGPON">XGPON</option>
+                <option value="GPON">GPON</option>
+                <option value="EPON">EPON</option>
+                <option value="XEPON">XEPON</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- OLT Module -->
+        <div class="section">
+          <div class="section-title">2. OLT Optical Module</div>
+          <div class="form-group">
+            <label>Select Module:</label>
+            <select id="oltModule" onchange="updateOLTInfo()"></select>
+          </div>
+          <div class="device-info" id="oltInfo"></div>
+        </div>
+        
+        <!-- ONU Device -->
+        <div class="section">
+          <div class="section-title">3. ONU Device Model</div>
+          <div class="form-group">
+            <label>Select ONU Device:</label>
+            <select id="onuModule" onchange="updateONUInfo()"></select>
+          </div>
+          <div class="device-info" id="onuInfo"></div>
+        </div>
+        
+        <!-- Splitter Settings -->
+        <div class="section">
+          <div class="section-title">4. Splitter Settings</div>
+          <div class="form-group">
+            <div class="form-inline">
+              <label>Split Ratio:</label>
+              <select id="splitter" onchange="updateSplitterInfo()">
+                <option value="">-- Select --</option>
+                <option value="1x2">1x2</option>
+                <option value="2x2">2x2</option>
+                <option value="1x4">1x4</option>
+                <option value="2x4">2x4</option>
+                <option value="1x8">1x8</option>
+                <option value="2x8">2x8</option>
+                <option value="1x16">1x16</option>
+                <option value="2x16">2x16</option>
+                <option value="1x32">1x32</option>
+                <option value="2x32">2x32</option>
+                <option value="1x64">1x64</option>
+                <option value="2x64">2x64</option>
+              </select>
+              <span class="loss-tag" id="splitterLoss">Loss: -- dB</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-inline">
+              <label>Attenuator (dB):</label>
+              <input type="number" id="attenuator" value="0" min="0" step="0.1" onchange="calculate()">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Fiber Length -->
+        <div class="section">
+          <div class="section-title">5. Fiber Length</div>
+          <div class="form-group">
+            <div class="form-inline">
+              <label>OLT to Splitter:</label>
+              <input type="number" id="fiberOlt" value="0" min="0" step="0.1" onchange="updateFiberLoss()">
+              <span class="unit">km</span>
+              <span class="loss-tag" id="fiberOltLoss">Loss: 0 dB</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-inline">
+              <label>Splitter to ONU:</label>
+              <input type="number" id="fiberOnu" value="0" min="0" step="0.1" onchange="updateFiberLoss()">
+              <span class="unit">km</span>
+              <span class="loss-tag" id="fiberOnuLoss">Loss: 0 dB</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Fusion & Patch -->
+        <div class="section">
+          <div class="section-title">6. Fusion & Patch Cables</div>
+          <div class="form-group">
+            <div class="form-inline">
+              <label>Patch Stages:</label>
+              <input type="number" id="fusionStages" value="0" min="0" max="20" onchange="updateFusionLoss()">
+              <span class="loss-tag" id="fusionLoss">(Loss: 0 dB)</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Connector Type -->
+        <div class="section">
+          <div class="section-title">7. Connector Type</div>
+          <div class="form-group">
+            <div class="form-inline">
+              <label>Connector Type:</label>
+              <div class="radio-group">
+                <label class="radio-item">
+                  <input type="radio" name="connector" value="UPC" checked onchange="updateConnectorLoss()">
+                  UPC
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="connector" value="APC" onchange="updateConnectorLoss()">
+                  APC
+                </label>
+              </div>
+              <span class="loss-tag" id="connectorLoss">(0 pcs, Loss: 0 dB)</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Buttons -->
+        <button class="btn-calc" onclick="calculate()">CALCULATE</button>
+        <button class="btn-clear" onclick="clearResults()">CLEAR</button>
+      </div>
+      
+      <!-- Results Panel -->
+      <div class="card">
+        <div class="card-title">Calculation Results</div>
+        
+        <!-- Total Loss -->
+        <div class="total-loss">
+          <div class="total-loss-label">Total Link Loss</div>
+          <div class="total-loss-value" id="totalLoss">- -</div>
+        </div>
+        
+        <!-- Loss Details -->
+        <div class="loss-grid">
+          <div class="loss-item">
+            <span class="loss-item-label">Fiber (OLT to Splitter)</span>
+            <span class="loss-item-value" id="lossFiberOlt">-</span>
+          </div>
+          <div class="loss-item">
+            <span class="loss-item-label">Fiber (Splitter to ONU)</span>
+            <span class="loss-item-value" id="lossFiberOnu">-</span>
+          </div>
+          <div class="loss-item">
+            <span class="loss-item-label">Splitter</span>
+            <span class="loss-item-value" id="lossSplitter">-</span>
+          </div>
+          <div class="loss-item">
+            <span class="loss-item-label">Attenuator</span>
+            <span class="loss-item-value" id="lossAttenuator">-</span>
+          </div>
+          <div class="loss-item">
+            <span class="loss-item-label">Fusion/Patch Points</span>
+            <span class="loss-item-value" id="lossFusion">-</span>
+          </div>
+          <div class="loss-item">
+            <span class="loss-item-label">Connector</span>
+            <span class="loss-item-value" id="lossConnector">-</span>
+          </div>
+        </div>
+        
+        <!-- Received Power -->
+        <div class="power-section">
+          <div class="section-title">Received Optical Power</div>
+          <div class="power-row">
+            <span class="power-label">OLT Side Rx Power:</span>
+            <div>
+              <span class="power-value" id="oltRxAvg">-</span>
+              <span class="power-range" id="oltRxRange">-</span>
+            </div>
+          </div>
+          <div class="power-row">
+            <span class="power-label">ONU Side Rx Power:</span>
+            <div>
+              <span class="power-value" id="onuRxAvg">-</span>
+              <span class="power-range" id="onuRxRange">-</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Judgment -->
+        <div class="judgment-box">
+          <div class="judgment-title">Judgment Result</div>
+          <div class="judgment-result" id="judgmentResult">Please set parameters and click Calculate</div>
+          <div class="judgment-details" id="judgmentDetails"></div>
+        </div>
+        
+        <!-- Reference -->
+        <div class="reference">
+          Reference: Optimal Rx Power Range -20 ~ -15 dBm for best reliability
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- OLT Manager Modal -->
+  <div class="modal-overlay" id="oltModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>OLT Optical Module Manager</h2>
+        <button class="modal-close" onclick="closeOLTManager()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <!-- Module List -->
+          <div>
+            <h3 style="margin-bottom: 15px; color: #374151;">All Module List</h3>
+            <p style="font-size: 12px; color: #6b7280; margin-bottom: 10px;">System modules (gray) | User modules</p>
+            <div class="module-list" id="oltModuleList"></div>
+          </div>
+          
+          <!-- Add New -->
+          <div>
+            <h3 style="margin-bottom: 15px; color: #374151;">Add New Device</h3>
+            <div class="form-group">
+              <label>Net Type:</label>
+              <select id="addOltNetType">
+                <option value="XGSPON">XGSPON</option>
+                <option value="XGPON">XGPON</option>
+                <option value="GPON">GPON</option>
+                <option value="EPON">EPON</option>
+                <option value="XEPON">XEPON</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Device Name:</label>
+              <input type="text" id="addOltName" placeholder="Enter device name">
+            </div>
+            <div class="form-group">
+              <label>Code:</label>
+              <input type="text" id="addOltCode" placeholder="Enter code">
+            </div>
+            <h4 style="margin: 15px 0 10px; color: #374151;">Device Parameters</h4>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>TX Max (dBm):</label>
+                <input type="number" id="addOltTxMax" step="0.1">
+              </div>
+              <div class="form-group">
+                <label>TX Min (dBm):</label>
+                <input type="number" id="addOltTxMin" step="0.1">
+              </div>
+              <div class="form-group">
+                <label>Rx Sensitivity (dBm):</label>
+                <input type="number" id="addOltRxSen" step="0.1">
+              </div>
+              <div class="form-group">
+                <label>Sat Power (dBm):</label>
+                <input type="number" id="addOltSat" step="0.1">
+              </div>
+            </div>
+            <div style="background: #fffbeb; padding: 10px; border-radius: 6px; margin: 15px 0; font-size: 12px; color: #92400e;">
+              Note: New devices will be categorized by network type in the dropdown list.
+            </div>
+            <button class="btn btn-success" style="width: 100%;" onclick="addOLTModule()">ADD</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-clear" onclick="closeOLTManager()">CLOSE</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ONU Manager Modal -->
+  <div class="modal-overlay" id="onuModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>ONU Device Manager</h2>
+        <button class="modal-close" onclick="closeONUManager()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <!-- Module List -->
+          <div>
+            <h3 style="margin-bottom: 15px; color: #374151;">All Device List</h3>
+            <p style="font-size: 12px; color: #6b7280; margin-bottom: 10px;">System devices (gray) | User devices</p>
+            <div class="module-list" id="onuModuleList"></div>
+          </div>
+          
+          <!-- Add New -->
+          <div>
+            <h3 style="margin-bottom: 15px; color: #374151;">Add New Device</h3>
+            <div class="form-group">
+              <label>Net Type:</label>
+              <select id="addOnuNetType">
+                <option value="XGSPON">XGSPON</option>
+                <option value="XGPON">XGPON</option>
+                <option value="GPON">GPON</option>
+                <option value="EPON">EPON</option>
+                <option value="XEPON">XEPON</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Device Name:</label>
+              <input type="text" id="addOnuName" placeholder="Enter device name">
+            </div>
+            <div class="form-group">
+              <label>Code:</label>
+              <input type="text" id="addOnuCode" placeholder="Enter code">
+            </div>
+            <h4 style="margin: 15px 0 10px; color: #374151;">Device Parameters</h4>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>TX Max (dBm):</label>
+                <input type="number" id="addOnuTxMax" step="0.1">
+              </div>
+              <div class="form-group">
+                <label>TX Min (dBm):</label>
+                <input type="number" id="addOnuTxMin" step="0.1">
+              </div>
+              <div class="form-group">
+                <label>Rx Sensitivity (dBm):</label>
+                <input type="number" id="addOnuRxSen" step="0.1">
+              </div>
+              <div class="form-group">
+                <label>Sat Power (dBm):</label>
+                <input type="number" id="addOnuSat" step="0.1">
+              </div>
+            </div>
+            <div style="background: #fffbeb; padding: 10px; border-radius: 6px; margin: 15px 0; font-size: 12px; color: #92400e;">
+              Note: New devices will be categorized by network type in the dropdown list.
+            </div>
+            <button class="btn btn-success" style="width: 100%;" onclick="addONUModule()">ADD</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-clear" onclick="closeONUManager()">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // Data Definitions
+    // ============================================
+    
+    const NETWORK_TYPES = ["XGSPON", "XGPON", "EPON", "GPON", "XEPON"];
+    
+    const OLT_MODULES = {
+      "XGSPON": [
+        "XGSPON COMBO(工作在XGSPON)",
+        "XGSPON COMBO(工作在XGPON)",
+        "XGSPON COMBO(工作在GPON)",
+        "XGSPON N2 (工作在XGSPON)",
+        "XGSPON N2 (工作在XGPON)",
+        "XGSPON E1 (工作在XGSPON)",
+        "XGSPON E1 (工作在XGPON)",
+      ],
+      "XGPON": [
+        "XGPON COMBO(工作在XGPON)",
+        "XGPON COMBO(工作在GPON)",
+        "XGSPON COMBO(工作在XGPON)",
+        "XGSPON N2 (工作在XGPON)",
+        "XGSPON E1 (工作在XGPON)",
+      ],
+      "GPON": [
+        "GPON-CLASS C+",
+        "GPON-CLASS B+",
+        "XGPON COMBO(工作在GPON)",
+        "XGSPON COMBO(工作在GPON)",
+      ],
+      "EPON": [
+        "EPON-PX20",
+        "XEPON(工作在EPON)-PR40",
+        "XEPON(工作在EPON)-PR30",
+      ],
+      "XEPON": [
+        "XEPON-PR40",
+        "XEPON-PR30",
+        "XEPON(工作在EPON)-PR40",
+        "XEPON(工作在EPON)-PR30",
+      ],
+    };
+    
+    const OLT_PARAMS = {
+      "XGSPON COMBO(工作在XGSPON)": { tx_max: 8, tx_min: 5, rx_sens: -29, sat_power: -8, code: "0231AKBN" },
+      "XGSPON COMBO(工作在XGPON)": { tx_max: 8, tx_min: 5, rx_sens: -30.5, sat_power: -10, code: "0231AKBN" },
+      "XGSPON COMBO(工作在GPON)": { tx_max: 9, tx_min: 4.5, rx_sens: -31, sat_power: -5, code: "0231AKBN" },
+      "XGSPON N2 (工作在XGSPON)": { tx_max: 7, tx_min: 4, rx_sens: -28, sat_power: -7, code: "0231AKBQ" },
+      "XGSPON N2 (工作在XGPON)": { tx_max: 7, tx_min: 4, rx_sens: -29.5, sat_power: -9, code: "0231AKBQ" },
+      "XGSPON E1 (工作在XGSPON)": { tx_max: 9, tx_min: 6, rx_sens: -30, sat_power: -9, code: "0231AKBR" },
+      "XGSPON E1 (工作在XGPON)": { tx_max: 9, tx_min: 6, rx_sens: -31.5, sat_power: -11, code: "0231AKBR" },
+      "XGPON COMBO(工作在XGPON)": { tx_max: 8, tx_min: 4, rx_sens: -29.5, sat_power: -8, code: "0231AKBP" },
+      "XGPON COMBO(工作在GPON)": { tx_max: 7, tx_min: 3, rx_sens: -30, sat_power: -12, code: "0231AKBP" },
+      "GPON-CLASS C+": { tx_max: 7, tx_min: 3, rx_sens: -30, sat_power: -12, code: "9801A3HF" },
+      "GPON-CLASS B+": { tx_max: 5, tx_min: 1.5, rx_sens: -28, sat_power: -8, code: "9801A3HG" },
+      "EPON-PX20": { tx_max: 7, tx_min: 2, rx_sens: -28, sat_power: -6, code: "0231A0J7" },
+      "XEPON-PR40": { tx_max: 9, tx_min: 5, rx_sens: -29, sat_power: -9, code: "0231AHW3" },
+      "XEPON-PR30": { tx_max: 5, tx_min: 2, rx_sens: -28, sat_power: -6, code: "0231AHW4" },
+      "XEPON(工作在EPON)-PR40": { tx_max: 10, tx_min: 4, rx_sens: -29, sat_power: -9, code: "0231AHW3" },
+      "XEPON(工作在EPON)-PR30": { tx_max: 7, tx_min: 2, rx_sens: -30, sat_power: -9.3, code: "0231AHW4" },
+    };
+    
+    const ONU_MODULES = {
+      "XGSPON": [
+        "GTH904-TW (XGSPON)",
+        "EGT904-H-TW (工作在XGSPON)",
+        "EGT924-H-R (工作在XGSPON)",
+        "EGT904-H-TWF (工作在XGSPON)",
+        "EGT901C-H-7WF (工作在XGSPON)",
+        "EGT904-H-T7WF (工作在XGSPON)",
+        "EGT910-H-PD (工作在XGSPON)",
+        "SFP(ONU)-XGSPON",
+        "SFP(ONU)-XGPON",
+      ],
+      "XGPON": [
+        "GT904-4TW (XGPON)",
+        "GT908-8TWA (XGPON)",
+        "FM104-TW (工作在XGPON)",
+        "SFP(ONU)-XGPON",
+      ],
+      "GPON": [
+        "WA6520H-EGPON(工作在GPON)",
+        "EGT358-P (工作在GPON)",
+        "EGT358-POTS (工作在GPON)",
+        "EGT354 (工作在GPON)",
+        "EGT354-P (工作在GPON)",
+        "EGT302 (工作在GPON)",
+        "EGT301-T (工作在GPON)",
+        "EGT304-2T(工作在GPON)",
+        "ET304-B (工作在GPON)",
+        "EGT304 (工作在GPON)",
+        "EGT304-TWB (工作在GPON)",
+        "EGT304-TWF (工作在GPON)",
+        "EGT308-H-T7W (工作在GPON)",
+        "EGT358-PA (工作在GPON)",
+        "SFP(ONU)-GPON C+",
+        "SFP(ONU)-GPON B+",
+        "FS102-W (GPON)",
+      ],
+      "EPON": [
+        "WA6520H-EGPON(工作在EPON)",
+        "ET358-POTS (EPON)",
+        "ET354-P (EPON)",
+        "ET358-P (EPON)",
+        "EGT358-P (工作在EPON)",
+        "EGT358-POTS (工作在EPON)",
+        "EGT354 (工作在EPON)",
+        "EGT354-P (工作在EPON)",
+        "ET304 (EPON)",
+        "ET304-C (EPON)",
+        "ET354 (EPON)",
+        "ET824-E-A (EPON)",
+        "ET354S-A (EPON)",
+        "ET354S-P (EPON)",
+        "ET358S-P (EPON)",
+        "EGT302 (工作在EPON)",
+        "EGT301-T (工作在EPON)",
+        "EGT304-2T(工作在EPON)",
+        "EGT358-R (工作在BOSA EPON)",
+        "ET304-B (工作在EPON)",
+        "EGT304 (工作在EPON)",
+        "EGT304-TWB (工作在EPON)",
+        "EGT304-TWF (工作在EPON)",
+        "EGT308-H-T7W (工作在EPON)",
+        "EGT358-PA (工作在EPON)",
+      ],
+      "XEPON": [
+        "WA6320H-XEPON",
+        "ET916-A (XEPON)",
+        "ET916-H-A (XEPON)",
+        "ET924-H-POE (XEPON)",
+        "ET904-A (XEPON)",
+        "ET904-H (XEPON)",
+        "ET904-H-P (XEPON)",
+        "ET908-H-P (XEPON)",
+        "ET908-H-POE-W (XEPON)",
+        "ET908-H-PQ (XEPON)",
+        "ET908-H-PD (XEPON)",
+        "EGT904-H-TW (工作在XEPON)",
+        "ET908-H-8TW (XEPON)",
+        "FM104-TW (工作在XEPON)",
+        "EGT904-H-TWF (工作在XEPON)",
+        "EGT924-H-R (工作在XEPON)",
+        "EGT901C-H-7WF (工作在XEPON)",
+        "EGT904-H-T7WF (工作在XEPON)",
+        "EGT910-H-PD (工作在XEPON)",
+        "SFP(ONU)-XEPON PR40",
+        "SFP(ONU)-XEPON PR30",
+      ],
+    };
+    
+    const ONU_PARAMS = {
+      "GTH904-TW (XGSPON)": { tx_max: 4, tx_min: 3, rx_sens: -28, sat_power: -8, code: "9801A4EJ" },
+      "EGT904-H-TW (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A4EH" },
+      "EGT924-H-R (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A456" },
+      "EGT904-H-TWF (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A5JP" },
+      "EGT901C-H-7WF (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A8X2" },
+      "EGT904-H-T7WF (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A8X3" },
+      "EGT910-H-PD (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A8X1" },
+      "GT904-4TW (XGPON)": { tx_max: 6, tx_min: 3, rx_sens: -28, sat_power: -8, code: "9801A450" },
+      "GT908-8TWA (XGPON)": { tx_max: 6, tx_min: 3, rx_sens: -28, sat_power: -8, code: "9801A44Y" },
+      "FM104-TW (工作在XGPON)": { tx_max: 6, tx_min: 3, rx_sens: -28, sat_power: -8, code: "9801A4KX" },
+      "SFP(ONU)-XGSPON": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "0231AK3T" },
+      "SFP(ONU)-XGPON": { tx_max: 7, tx_min: 2, rx_sens: -28, sat_power: -8, code: "0231AK3R" },
+      "SFP(ONU)-GPON C+": { tx_max: 5, tx_min: 0.5, rx_sens: -30, sat_power: -8, code: "0231AK3P" },
+      "SFP(ONU)-GPON B+": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "0231AK3U" },
+      "SFP(ONU)-XEPON PR40": { tx_max: 9, tx_min: 6, rx_sens: -29.5, sat_power: -9, code: "0231AK3Q" },
+      "SFP(ONU)-XEPON PR30": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "0231AK3S" },
+      "WA6520H-EGPON(工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A3HK" },
+      "EGT358-P (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -27, sat_power: -8, code: "9801A3GW" },
+      "EGT358-POTS (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -27, sat_power: -8, code: "9801A3GX" },
+      "EGT354 (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A3GP" },
+      "EGT354-P (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A3GN" },
+      "EGT302 (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A3GY" },
+      "EGT301-T (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4C7" },
+      "EGT304-2T(工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4C8" },
+      "ET304-B (工作在GPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4BS" },
+      "EGT304 (工作在GPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4BT" },
+      "EGT304-TWB (工作在GPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4Q3" },
+      "EGT304-TWF (工作在GPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A5JN" },
+      "EGT308-H-T7W (工作在GPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -27, sat_power: -8, code: "9801A8X4" },
+      "EGT358-PA (工作在GPON)": { tx_max: 4.5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A8X0" },
+      "FS102-W (GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4KW" },
+      "WA6520H-EGPON(工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3HK" },
+      "ET358-POTS (EPON)": { tx_max: 3.5, tx_min: 1.5, rx_sens: -28.5, sat_power: -7, code: "9801A25V" },
+      "ET354-P (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A2YE" },
+      "ET358-P (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A2YB" },
+      "EGT358-P (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GW" },
+      "EGT358-POTS (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GX" },
+      "EGT354 (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GP" },
+      "EGT354-P (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GN" },
+      "ET304 (EPON)": { tx_max: 4, tx_min: -1, rx_sens: -26.5, sat_power: -6, code: "9801A3GD" },
+      "ET304-C (EPON)": { tx_max: 4, tx_min: -1, rx_sens: -26.5, sat_power: -6, code: "9801A3PE" },
+      "ET354 (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GE" },
+      "ET824-E-A (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GA" },
+      "ET354S-A (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3J6" },
+      "ET354S-P (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3J5" },
+      "ET358S-P (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3J7" },
+      "EGT302 (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GY" },
+      "EGT301-T (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A4C7" },
+      "EGT304-2T(工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A4C8" },
+      "EGT358-R (工作在BOSA EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A455" },
+      "ET304-B (工作在EPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -3, code: "9801A4BS" },
+      "EGT304 (工作在EPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -3, code: "9801A4BT" },
+      "EGT304-TWB (工作在EPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -3, code: "9801A4Q3" },
+      "EGT304-TWF (工作在EPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -3, code: "9801A5JN" },
+      "EGT308-H-T7W (工作在EPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -27, sat_power: -3, code: "9801A8X4" },
+      "EGT358-PA (工作在EPON)": { tx_max: 4.5, tx_min: 0.5, rx_sens: -28, sat_power: -3, code: "9801A8X0" },
+      "WA6320H-XEPON": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A2JD" },
+      "ET916-A (XEPON)": { tx_max: 5, tx_min: 1, rx_sens: -28.5, sat_power: -10, code: "9801A25T" },
+      "ET916-H-A (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A25S" },
+      "ET924-H-POE (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A25U" },
+      "ET904-A (XEPON)": { tx_max: 5, tx_min: 1, rx_sens: -28.5, sat_power: -8, code: "9801A2FX" },
+      "ET904-H (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -8, code: "9801A2P3" },
+      "ET904-H-P (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A2QA" },
+      "ET908-H-P (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A2Q9" },
+      "ET908-H-POE-W (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A2UA" },
+      "ET908-H-PQ (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A3B2" },
+      "ET908-H-PD (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A3B9" },
+      "EGT904-H-TW (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -9, code: "9801A4EH" },
+      "ET908-H-8TW (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A4BU" },
+      "EGT904-H-TWF (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -9, code: "9801A5JP" },
+      "EGT924-H-R (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A456" },
+      "EGT901C-H-7WF (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -9, code: "9801A8X2" },
+      "EGT904-H-T7WF (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -9, code: "9801A8X3" },
+      "EGT910-H-PD (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -9, code: "9801A8X1" },
+    };
+    
+    const SPLITTER_LOSS = {
+      "1x2": 3.8, "2x2": 4.2, "1x4": 7.1, "2x4": 7.4,
+      "1x8": 10.2, "2x8": 10.8, "1x16": 13.5, "2x16": 14.1,
+      "1x32": 16.6, "2x32": 17.2, "1x64": 20.1, "2x64": 20.4,
+    };
+    
+    const FIBER_LOSS = 0.04;
+    const FUSION_LOSS_MIN = 0.04;
+    
+    // User-defined modules (loaded from localStorage)
+    let userOLTModules = {};
+    let userONUModules = {};
+    
+    // ============================================
+    // Initialization
+    // ============================================
+    
+    function init() {
+      loadUserModules();
+      onNetworkTypeChange();
+      updateConnectorLoss();
+    }
+    
+    function loadUserModules() {
+      try {
+        const saved = localStorage.getItem('ponCalcUserData');
+        if (saved) {
+          const data = JSON.parse(saved);
+          userOLTModules = data.olt || {};
+          userONUModules = data.onu || {};
+          // Merge user params
+          if (data.oltParams) Object.assign(OLT_PARAMS, data.oltParams);
+          if (data.onuParams) Object.assign(ONU_PARAMS, data.onuParams);
+        }
+      } catch (e) {
+        console.log('No saved user data');
+      }
+    }
+    
+    function saveUserModules() {
+      const data = {
+        olt: userOLTModules,
+        onu: userONUModules,
+        oltParams: {},
+        onuParams: {},
+      };
+      // Save only user-defined params
+      for (const netType in userOLTModules) {
+        for (const module of userOLTModules[netType]) {
+          if (OLT_PARAMS[module]) {
+            data.oltParams[module] = OLT_PARAMS[module];
+          }
+        }
+      }
+      for (const netType in userONUModules) {
+        for (const module of userONUModules[netType]) {
+          if (ONU_PARAMS[module]) {
+            data.onuParams[module] = ONU_PARAMS[module];
+          }
+        }
+      }
+      localStorage.setItem('ponCalcUserData', JSON.stringify(data));
+    }
+    
+    // ============================================
+    // Event Handlers
+    // ============================================
+    
+    function onNetworkTypeChange() {
+      const netType = document.getElementById('networkType').value;
+      
+      // Update OLT modules
+      const systemOLT = OLT_MODULES[netType] || [];
+      const userOLT = userOLTModules[netType] || [];
+      const allOLT = [...systemOLT, ...userOLT];
+      
+      const oltSelect = document.getElementById('oltModule');
+      oltSelect.innerHTML = allOLT.map(m => `<option value="${m}">${m}</option>`).join('');
+      
+      // Update ONU modules
+      const systemONU = ONU_MODULES[netType] || [];
+      const userONU = userONUModules[netType] || [];
+      const allONU = [...systemONU, ...userONU];
+      
+      const onuSelect = document.getElementById('onuModule');
+      onuSelect.innerHTML = allONU.map(m => `<option value="${m}">${m}</option>`).join('');
+      
+      updateOLTInfo();
+      updateONUInfo();
+    }
+    
+    function updateOLTInfo() {
+      const module = document.getElementById('oltModule').value;
+      const info = OLT_PARAMS[module];
+      const infoDiv = document.getElementById('oltInfo');
+      
+      if (info) {
+        infoDiv.innerHTML = `
+          TX Power: ${info.tx_min}~${info.tx_max} dBm | Rx Sensitivity: ${info.rx_sens} dBm | Sat Power: ${info.sat_power} dBm
+          <div class="device-code">Code: ${info.code}</div>
+        `;
+      } else {
+        infoDiv.innerHTML = '';
+      }
+    }
+    
+    function updateONUInfo() {
+      const module = document.getElementById('onuModule').value;
+      const info = ONU_PARAMS[module];
+      const infoDiv = document.getElementById('onuInfo');
+      
+      if (info) {
+        infoDiv.innerHTML = `
+          TX Power: ${info.tx_min}~${info.tx_max} dBm | Rx Sensitivity: ${info.rx_sens} dBm | Sat Power: ${info.sat_power} dBm
+          <div class="device-code">Code: ${info.code}</div>
+        `;
+      } else {
+        infoDiv.innerHTML = '';
+      }
+    }
+    
+    function updateSplitterInfo() {
+      const ratio = document.getElementById('splitter').value;
+      const loss = SPLITTER_LOSS[ratio];
+      document.getElementById('splitterLoss').textContent = loss ? `Loss: ${loss} dB` : 'Loss: -- dB';
+    }
+    
+    function updateFiberLoss() {
+      const fiberOlt = parseFloat(document.getElementById('fiberOlt').value) || 0;
+      const fiberOnu = parseFloat(document.getElementById('fiberOnu').value) || 0;
+      
+      document.getElementById('fiberOltLoss').textContent = `Loss: ${(fiberOlt * FIBER_LOSS).toFixed(3)} dB`;
+      document.getElementById('fiberOnuLoss').textContent = `Loss: ${(fiberOnu * FIBER_LOSS).toFixed(3)} dB`;
+    }
+    
+    function updateFusionLoss() {
+      const stages = parseInt(document.getElementById('fusionStages').value) || 0;
+      const loss = stages * FUSION_LOSS_MIN;
+      document.getElementById('fusionLoss').textContent = `(Loss: ${loss.toFixed(2)} dB)`;
+      updateConnectorLoss();
+    }
+    
+    function updateConnectorLoss() {
+      const connectorType = document.querySelector('input[name="connector"]:checked').value;
+      const stages = parseInt(document.getElementById('fusionStages').value) || 0;
+      const lossPerConnector = connectorType === 'UPC' ? 0.1 : 0.2;
+      const totalConnectors = (stages + 1) * 2 + 2;
+      const totalLoss = totalConnectors * lossPerConnector;
+      
+      document.getElementById('connectorLoss').textContent = `(${totalConnectors} pcs, Loss: ${totalLoss.toFixed(2)} dB)`;
+    }
+    
+    // ============================================
+    // Calculation
+    // ============================================
+    
+    function calculate() {
+      const oltModule = document.getElementById('oltModule').value;
+      const onuModule = document.getElementById('onuModule').value;
+      const splitterRatio = document.getElementById('splitter').value;
+      
+      if (!oltModule || !onuModule || !splitterRatio) {
+        alert('Please select OLT module, ONU device, and Splitter');
+        return;
+      }
+      
+      const olt = OLT_PARAMS[oltModule];
+      const onu = ONU_PARAMS[onuModule];
+      const splitterLoss = SPLITTER_LOSS[splitterRatio];
+      
+      const fiberOlt = parseFloat(document.getElementById('fiberOlt').value) || 0;
+      const fiberOnu = parseFloat(document.getElementById('fiberOnu').value) || 0;
+      const attenuator = parseFloat(document.getElementById('attenuator').value) || 0;
+      const fusionStages = parseInt(document.getElementById('fusionStages').value) || 0;
+      const connectorType = document.querySelector('input[name="connector"]:checked').value;
+      
+      // Calculate losses
+      const fiberOltLoss = fiberOlt * FIBER_LOSS;
+      const fiberOnuLoss = fiberOnu * FIBER_LOSS;
+      const fusionLoss = fusionStages * FUSION_LOSS_MIN;
+      const connectorLossPer = connectorType === 'UPC' ? 0.1 : 0.2;
+      const connectorLoss = ((fusionStages + 1) * 2 + 2) * connectorLossPer;
+      const totalLoss = fiberOltLoss + splitterLoss + attenuator + fusionLoss + fiberOnuLoss + connectorLoss;
+      
+      // Calculate received power
+      const oltTxMax = olt.tx_max;
+      const oltTxMin = olt.tx_min;
+      const onuTxMax = onu.tx_max;
+      const onuTxMin = onu.tx_min;
+      
+      // OLT received (upstream)
+      const oltRxMax = onuTxMax - totalLoss;
+      const oltRxMin = onuTxMin - totalLoss;
+      const oltRxAvg = (oltRxMin + oltRxMax) / 2;
+      
+      // ONU received (downstream)
+      const onuRxMax = oltTxMax - totalLoss;
+      const onuRxMin = oltTxMin - totalLoss;
+      const onuRxAvg = (onuRxMin + onuRxMax) / 2;
+      
+      // Update display
+      document.getElementById('totalLoss').textContent = `${totalLoss.toFixed(2)} dB`;
+      document.getElementById('lossFiberOlt').textContent = `${fiberOltLoss.toFixed(3)} dB`;
+      document.getElementById('lossFiberOnu').textContent = `${fiberOnuLoss.toFixed(3)} dB`;
+      document.getElementById('lossSplitter').textContent = `${splitterLoss.toFixed(1)} dB`;
+      document.getElementById('lossAttenuator').textContent = `${attenuator.toFixed(1)} dB`;
+      document.getElementById('lossFusion').textContent = `${fusionLoss.toFixed(2)} dB`;
+      document.getElementById('lossConnector').textContent = `${connectorLoss.toFixed(2)} dB (${connectorType})`;
+      
+      document.getElementById('oltRxAvg').textContent = `${oltRxAvg.toFixed(2)} dBm`;
+      document.getElementById('oltRxRange').textContent = `(${oltRxMin.toFixed(2)} ~ ${oltRxMax.toFixed(2)})`;
+      document.getElementById('onuRxAvg').textContent = `${onuRxAvg.toFixed(2)} dBm`;
+      document.getElementById('onuRxRange').textContent = `(${onuRxMin.toFixed(2)} ~ ${onuRxMax.toFixed(2)})`;
+      
+      // Generate judgment
+      generateJudgment(olt, onu, oltRxAvg, onuRxAvg, oltRxMin, oltRxMax, onuRxMin, onuRxMax, onuModule);
+    }
+    
+    function generateJudgment(olt, onu, oltRxAvg, onuRxAvg, oltRxMin, oltRxMax, onuRxMin, onuRxMax, onuModule) {
+      const CRITICAL_THRESHOLD = 1.0;
+      let uplinkStatus = 'normal';
+      let downlinkStatus = 'normal';
+      const uplinkLines = [];
+      const downlinkLines = [];
+      
+      // Upstream analysis
+      if (oltRxAvg > olt.sat_power) {
+        uplinkStatus = 'fail';
+        uplinkLines.push({ text: `[Upstream] OLT Side Rx Power ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: 'title' });
+        uplinkLines.push({ text: `  - Rx Value > Saturation Power (${olt.sat_power} dBm)`, class: '' });
+        uplinkLines.push({ text: `  - Conclusion: Optical Power FAILED`, class: 'fail' });
+      } else if (oltRxAvg < olt.rx_sens) {
+        uplinkStatus = 'fail';
+        uplinkLines.push({ text: `[Upstream] OLT Side Rx Power ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: 'title' });
+        uplinkLines.push({ text: `  - Rx Value < Rx Sensitivity (${olt.rx_sens} dBm)`, class: '' });
+        uplinkLines.push({ text: `  - Conclusion: Optical Power FAILED`, class: 'fail' });
+      } else {
+        const satDiff = olt.sat_power - oltRxAvg;
+        const senDiff = oltRxAvg - olt.rx_sens;
+        if (satDiff <= CRITICAL_THRESHOLD || senDiff <= CRITICAL_THRESHOLD) {
+          uplinkStatus = 'warning';
+          uplinkLines.push({ text: `[Upstream] OLT Side Rx Power ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: 'title' });
+          uplinkLines.push({ text: `  - Diff from Sat Power (${olt.sat_power} dBm): ${satDiff.toFixed(2)} dB`, class: '' });
+          uplinkLines.push({ text: `  - Diff from Rx Sensitivity (${olt.rx_sens} dBm): ${senDiff.toFixed(2)} dB`, class: '' });
+          uplinkLines.push({ text: `  - Conclusion: Optical Power at CRITICAL, usage risk exists`, class: 'warning' });
+        } else {
+          uplinkLines.push({ text: `[Upstream] OLT Side Rx Power ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: 'title' });
+          uplinkLines.push({ text: `  - Less than Sat Power (${olt.sat_power} dBm)`, class: '' });
+          uplinkLines.push({ text: `  - Greater than Rx Sensitivity (${olt.rx_sens} dBm)`, class: '' });
+          uplinkLines.push({ text: `  - Conclusion: Optical Power NORMAL`, class: 'success' });
+        }
+      }
+      
+      // Downstream analysis
+      if (onuRxAvg > onu.sat_power) {
+        downlinkStatus = 'fail';
+        downlinkLines.push({ text: `[Downstream] ${onuModule} Rx Power ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: 'title' });
+        downlinkLines.push({ text: `  - Rx Value > Saturation Power (${onu.sat_power} dBm)`, class: '' });
+        downlinkLines.push({ text: `  - Conclusion: Optical Power FAILED`, class: 'fail' });
+      } else if (onuRxAvg < onu.rx_sens) {
+        downlinkStatus = 'fail';
+        downlinkLines.push({ text: `[Downstream] ${onuModule} Rx Power ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: 'title' });
+        downlinkLines.push({ text: `  - Rx Value < Rx Sensitivity (${onu.rx_sens} dBm)`, class: '' });
+        downlinkLines.push({ text: `  - Conclusion: Optical Power FAILED`, class: 'fail' });
+      } else {
+        const satDiff = onu.sat_power - onuRxAvg;
+        const senDiff = onuRxAvg - onu.rx_sens;
+        if (satDiff <= CRITICAL_THRESHOLD || senDiff <= CRITICAL_THRESHOLD) {
+          downlinkStatus = 'warning';
+          downlinkLines.push({ text: `[Downstream] ${onuModule} Rx Power ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: 'title' });
+          downlinkLines.push({ text: `  - Diff from Sat Power (${onu.sat_power} dBm): ${satDiff.toFixed(2)} dB`, class: '' });
+          downlinkLines.push({ text: `  - Diff from Rx Sensitivity (${onu.rx_sens} dBm): ${senDiff.toFixed(2)} dB`, class: '' });
+          downlinkLines.push({ text: `  - Conclusion: Optical Power at CRITICAL, usage risk exists`, class: 'warning' });
+        } else {
+          downlinkLines.push({ text: `[Downstream] ${onuModule} Rx Power ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: 'title' });
+          downlinkLines.push({ text: `  - Less than Sat Power (${onu.sat_power} dBm)`, class: '' });
+          downlinkLines.push({ text: `  - Greater than Rx Sensitivity (${onu.rx_sens} dBm)`, class: '' });
+          downlinkLines.push({ text: `  - Conclusion: Optical Power NORMAL`, class: 'success' });
+        }
+      }
+      
+      // Final judgment
+      let status, statusClass;
+      if (uplinkStatus === 'fail' || downlinkStatus === 'fail') {
+        status = 'FAIL';
+        statusClass = 'fail';
+      } else if (uplinkStatus === 'warning' || downlinkStatus === 'warning') {
+        status = 'CRITICAL';
+        statusClass = 'warning';
+      } else {
+        status = 'PASS';
+        statusClass = 'pass';
+      }
+      
+      const resultDiv = document.getElementById('judgmentResult');
+      resultDiv.textContent = `Optical Power: ${status}`;
+      resultDiv.className = `judgment-result ${statusClass}`;
+      
+      const detailsDiv = document.getElementById('judgmentDetails');
+      detailsDiv.innerHTML = [...uplinkLines, { text: '', class: '' }, ...downlinkLines]
+        .map(line => `<div class="judgment-line ${line.class}">${line.text}</div>`)
+        .join('');
+    }
+    
+    function clearResults() {
+      document.getElementById('totalLoss').textContent = '- -';
+      document.getElementById('lossFiberOlt').textContent = '-';
+      document.getElementById('lossFiberOnu').textContent = '-';
+      document.getElementById('lossSplitter').textContent = '-';
+      document.getElementById('lossAttenuator').textContent = '-';
+      document.getElementById('lossFusion').textContent = '-';
+      document.getElementById('lossConnector').textContent = '-';
+      document.getElementById('oltRxAvg').textContent = '-';
+      document.getElementById('oltRxRange').textContent = '-';
+      document.getElementById('onuRxAvg').textContent = '-';
+      document.getElementById('onuRxRange').textContent = '-';
+      document.getElementById('judgmentResult').textContent = 'Please set parameters and click Calculate';
+      document.getElementById('judgmentResult').className = 'judgment-result';
+      document.getElementById('judgmentDetails').innerHTML = '';
+    }
+    
+    // ============================================
+    // Module Manager
+    // ============================================
+    
+    function openOLTManager() {
+      const listDiv = document.getElementById('oltModuleList');
+      const netType = document.getElementById('networkType').value;
+      
+      let html = '';
+      for (const type of NETWORK_TYPES) {
+        const systemModules = OLT_MODULES[type] || [];
+        const userModules = userOLTModules[type] || [];
+        
+        for (const module of systemModules) {
+          const params = OLT_PARAMS[module] || {};
+          html += `<div class="module-item system">
+            <div>
+              <span class="module-type">${type}</span>
+              <span class="module-name">${module}</span>
+            </div>
+            <span class="module-code">${params.code || 'N/A'}</span>
+          </div>`;
+        }
+        
+        for (const module of userModules) {
+          const params = OLT_PARAMS[module] || {};
+          html += `<div class="module-item user" onclick="selectOLTModule('${module}', '${type}')">
+            <div>
+              <span class="module-type">${type}</span>
+              <span class="module-name">${module}</span>
+            </div>
+            <span class="module-code">${params.code || 'N/A'}</span>
+          </div>`;
+        }
+      }
+      
+      listDiv.innerHTML = html || '<div style="padding: 20px; text-align: center; color: #9ca3af;">No modules</div>';
+      document.getElementById('oltModal').classList.add('active');
+    }
+    
+    function closeOLTManager() {
+      document.getElementById('oltModal').classList.remove('active');
+    }
+    
+    function selectOLTModule(moduleName, netType) {
+      const params = OLT_PARAMS[moduleName];
+      if (params) {
+        document.getElementById('addOltNetType').value = netType;
+        document.getElementById('addOltName').value = moduleName;
+        document.getElementById('addOltCode').value = params.code || '';
+        document.getElementById('addOltTxMax').value = params.tx_max || '';
+        document.getElementById('addOltTxMin').value = params.tx_min || '';
+        document.getElementById('addOltRxSen').value = params.rx_sens || '';
+        document.getElementById('addOltSat').value = params.sat_power || '';
+      }
+    }
+    
+    function addOLTModule() {
+      const netType = document.getElementById('addOltNetType').value;
+      const name = document.getElementById('addOltName').value.trim();
+      const code = document.getElementById('addOltCode').value.trim();
+      const txMax = parseFloat(document.getElementById('addOltTxMax').value);
+      const txMin = parseFloat(document.getElementById('addOltTxMin').value);
+      const rxSen = parseFloat(document.getElementById('addOltRxSen').value);
+      const sat = parseFloat(document.getElementById('addOltSat').value);
+      
+      if (!name || !code || isNaN(txMax) || isNaN(txMin) || isNaN(rxSen) || isNaN(sat)) {
+        alert('Please enter all required fields');
+        return;
+      }
+      
+      if (OLT_PARAMS[name]) {
+        alert(`Device '${name}' already exists`);
+        return;
+      }
+      
+      OLT_PARAMS[name] = { tx_max: txMax, tx_min: txMin, rx_sens: rxSen, sat_power: sat, code };
+      
+      if (!userOLTModules[netType]) userOLTModules[netType] = [];
+      if (!userOLTModules[netType].includes(name)) {
+        userOLTModules[netType].push(name);
+      }
+      
+      saveUserModules();
+      onNetworkTypeChange();
+      openOLTManager();
+      alert(`Device '${name}' added successfully!`);
+    }
+    
+    function openONUManager() {
+      const listDiv = document.getElementById('onuModuleList');
+      
+      let html = '';
+      for (const type of NETWORK_TYPES) {
+        const systemModules = ONU_MODULES[type] || [];
+        const userModules = userONUModules[type] || [];
+        
+        for (const module of systemModules) {
+          const params = ONU_PARAMS[module] || {};
+          html += `<div class="module-item system">
+            <div>
+              <span class="module-type">${type}</span>
+              <span class="module-name">${module}</span>
+            </div>
+            <span class="module-code">${params.code || 'N/A'}</span>
+          </div>`;
+        }
+        
+        for (const module of userModules) {
+          const params = ONU_PARAMS[module] || {};
+          html += `<div class="module-item user" onclick="selectONUModule('${module}', '${type}')">
+            <div>
+              <span class="module-type">${type}</span>
+              <span class="module-name">${module}</span>
+            </div>
+            <span class="module-code">${params.code || 'N/A'}</span>
+          </div>`;
+        }
+      }
+      
+      listDiv.innerHTML = html || '<div style="padding: 20px; text-align: center; color: #9ca3af;">No modules</div>';
+      document.getElementById('onuModal').classList.add('active');
+    }
+    
+    function closeONUManager() {
+      document.getElementById('onuModal').classList.remove('active');
+    }
+    
+    function selectONUModule(moduleName, netType) {
+      const params = ONU_PARAMS[moduleName];
+      if (params) {
+        document.getElementById('addOnuNetType').value = netType;
+        document.getElementById('addOnuName').value = moduleName;
+        document.getElementById('addOnuCode').value = params.code || '';
+        document.getElementById('addOnuTxMax').value = params.tx_max || '';
+        document.getElementById('addOnuTxMin').value = params.tx_min || '';
+        document.getElementById('addOnuRxSen').value = params.rx_sens || '';
+        document.getElementById('addOnuSat').value = params.sat_power || '';
+      }
+    }
+    
+    function addONUModule() {
+      const netType = document.getElementById('addOnuNetType').value;
+      const name = document.getElementById('addOnuName').value.trim();
+      const code = document.getElementById('addOnuCode').value.trim();
+      const txMax = parseFloat(document.getElementById('addOnuTxMax').value);
+      const txMin = parseFloat(document.getElementById('addOnuTxMin').value);
+      const rxSen = parseFloat(document.getElementById('addOnuRxSen').value);
+      const sat = parseFloat(document.getElementById('addOnuSat').value);
+      
+      if (!name || !code || isNaN(txMax) || isNaN(txMin) || isNaN(rxSen) || isNaN(sat)) {
+        alert('Please enter all required fields');
+        return;
+      }
+      
+      if (ONU_PARAMS[name]) {
+        alert(`Device '${name}' already exists`);
+        return;
+      }
+      
+      ONU_PARAMS[name] = { tx_max: txMax, tx_min: txMin, rx_sens: rxSen, sat_power: sat, code };
+      
+      if (!userONUModules[netType]) userONUModules[netType] = [];
+      if (!userONUModules[netType].includes(name)) {
+        userONUModules[netType].push(name);
+      }
+      
+      saveUserModules();
+      onNetworkTypeChange();
+      openONUManager();
+      alert(`Device '${name}' added successfully!`);
+    }
+    
+    // Initialize on load
+    init();
+  </script>
+</body>
+</html>
