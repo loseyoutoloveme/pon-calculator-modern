@@ -5,12 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>新华三PON光功率计算器 - 综合版</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
@@ -26,24 +21,9 @@
       justify-content: center;
       padding: 40px 20px;
     }
-    
-    .home-header {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-    
-    .home-header h1 {
-      font-size: 42px;
-      color: #fff;
-      margin-bottom: 15px;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-    }
-    
-    .home-header p {
-      font-size: 18px;
-      color: rgba(255,255,255,0.7);
-    }
-    
+    .home-header { text-align: center; margin-bottom: 50px; }
+    .home-header h1 { font-size: 42px; color: #fff; margin-bottom: 15px; }
+    .home-header p { font-size: 18px; color: rgba(255,255,255,0.7); }
     .module-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -51,7 +31,6 @@
       max-width: 900px;
       width: 100%;
     }
-    
     .module-card {
       background: rgba(255,255,255,0.95);
       border-radius: 20px;
@@ -63,792 +42,273 @@
       position: relative;
       overflow: hidden;
     }
-    
     .module-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 5px;
     }
-    
-    .module-card:nth-child(1)::before {
-      background: linear-gradient(90deg, #667eea, #764ba2);
-    }
-    
-    .module-card:nth-child(2)::before {
-      background: linear-gradient(90deg, #f093fb, #f5576c);
-    }
-    
-    .module-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-    
+    .module-card:nth-child(1)::before { background: linear-gradient(90deg, #667eea, #764ba2); }
+    .module-card:nth-child(2)::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
+    .module-card:hover { transform: translateY(-10px); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
     .module-icon {
-      width: 100px;
-      height: 100px;
+      width: 100px; height: 100px;
       margin: 0 auto 25px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 40px;
     }
-    
-    .module-card:nth-child(1) .module-icon {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    .module-card:nth-child(2) .module-icon {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    }
-    
-    .module-card h2 {
-      font-size: 24px;
-      color: #1a1a2e;
-      margin-bottom: 10px;
-    }
-    
-    .module-card p {
-      font-size: 14px;
-      color: #666;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-    
-    .module-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-    }
-    
-    .module-tag {
-      padding: 5px 12px;
-      background: #f0f0f0;
-      border-radius: 20px;
-      font-size: 12px;
-      color: #666;
-    }
-    
+    .module-card:nth-child(1) .module-icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .module-card:nth-child(2) .module-icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .module-card h2 { font-size: 24px; color: #1a1a2e; margin-bottom: 10px; }
+    .module-card p { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 20px; }
+    .module-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .module-tag { padding: 5px 12px; background: #f0f0f0; border-radius: 20px; font-size: 12px; color: #666; }
     .enter-btn {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 30px;
-      border-radius: 25px;
-      color: #fff;
-      font-weight: 600;
-      transition: all 0.3s;
+      display: inline-block; margin-top: 20px;
+      padding: 12px 30px; border-radius: 25px;
+      color: #fff; font-weight: 600; transition: all 0.3s;
     }
-    
-    .module-card:nth-child(1) .enter-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    .module-card:nth-child(2) .enter-btn {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    }
-    
-    .module-card:hover .enter-btn {
-      transform: scale(1.05);
-    }
+    .module-card:nth-child(1) .enter-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .module-card:nth-child(2) .enter-btn { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .module-card:hover .enter-btn { transform: scale(1.05); }
     
     /* ========== Calculator Pages ========== */
-    .calculator-page {
-      display: none;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    
-    .calculator-page.active {
-      display: block;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    /* Back Button */
+    .calculator-page { display: none; min-height: 100vh; padding: 20px; }
+    .calculator-page.active { display: block; }
+    .container { max-width: 1100px; margin: 0 auto; }
     .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      display: inline-flex; align-items: center; gap: 8px;
       padding: 10px 20px;
       background: rgba(255,255,255,0.1);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      margin-bottom: 20px;
-      transition: all 0.3s;
+      color: #fff; border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px; cursor: pointer; font-size: 14px;
+      margin-bottom: 20px; transition: all 0.3s;
     }
-    
-    .back-btn:hover {
-      background: rgba(255,255,255,0.2);
-    }
-    
-    /* Header */
-    .header {
-      background: #fff;
-      border-radius: 16px;
-      padding: 20px 30px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-      text-align: center;
-    }
-    
-    .header h1 {
-      font-size: 28px;
-      color: #2c5aa0;
-      margin-bottom: 5px;
-    }
-    
-    .header p {
-      color: #666;
-      font-size: 14px;
-    }
+    .back-btn:hover { background: rgba(255,255,255,0.2); }
     
     /* Card */
     .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      background: #fff; border-radius: 16px; padding: 25px;
+      margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15);
     }
-    
     .card-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
+      font-size: 18px; font-weight: 600; color: #374151;
+      margin-bottom: 20px; padding-bottom: 12px;
       border-bottom: 2px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: flex; align-items: center; gap: 10px;
     }
-    
     .card-title::before {
       content: '';
-      width: 4px;
-      height: 20px;
+      width: 4px; height: 20px;
       background: linear-gradient(180deg, #667eea, #764ba2);
       border-radius: 2px;
     }
     
-    /* Device Selection */
-    .device-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-    
-    @media (max-width: 768px) {
-      .device-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    .device-card {
-      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-      border-radius: 12px;
-      padding: 20px;
-      border: 1px solid #e2e8f0;
-    }
-    
-    .device-card h3 {
-      font-size: 14px;
-      color: #64748b;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .device-card select {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 14px;
-      background: #fff;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .device-card select:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-    
-    .device-info {
-      margin-top: 15px;
-      padding: 12px;
-      background: #fff;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #475569;
-      line-height: 1.6;
-    }
-    
-    .device-info strong {
-      color: #667eea;
-    }
-    
-    /* Splitter Table */
-    .splitter-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    
-    .splitter-table th {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-      padding: 14px 10px;
-      font-size: 13px;
-      font-weight: 500;
-      text-align: center;
-    }
-    
-    .splitter-table th:first-child {
-      border-radius: 8px 0 0 0;
-    }
-    
-    .splitter-table th:last-child {
-      border-radius: 0 8px 0 0;
-    }
-    
-    .splitter-table td {
-      padding: 12px 10px;
-      text-align: center;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 13px;
-    }
-    
-    .splitter-table tr:nth-child(even) {
-      background: #f8fafc;
-    }
-    
-    .splitter-table tr:hover {
-      background: #f1f5f9;
-    }
-    
-    .splitter-table select, .splitter-table input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      font-size: 13px;
-      background: #fff;
-    }
-    
-    .splitter-table .level-cell {
-      font-weight: 600;
-      color: #667eea;
-    }
-    
-    .splitter-table .loss-cell {
-      font-family: 'Consolas', monospace;
-      color: #64748b;
-    }
-    
-    .splitter-table .power-cell {
-      font-family: 'Consolas', monospace;
-      font-weight: 600;
-    }
-    
-    .splitter-table .rx-power {
-      color: #10b981;
-    }
-    
-    .splitter-table .status-pass {
-      color: #10b981;
-      font-weight: 600;
-    }
-    
-    .splitter-table .status-fail {
-      color: #ef4444;
-      font-weight: 600;
-    }
-    
-    .splitter-table .status-pending {
-      color: #94a3b8;
-    }
-    
-    .del-btn {
-      background: #ef4444;
-      color: #fff;
-      border: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: all 0.2s;
-    }
-    
-    .del-btn:hover {
-      background: #dc2626;
-      transform: scale(1.1);
-    }
-    
-    /* Add Button */
-    .add-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s;
-      margin-top: 15px;
-    }
-    
-    .add-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-    }
-    
-    /* Buttons */
-    .btn-group {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      margin-top: 25px;
-    }
-    
-    .btn {
-      padding: 14px 35px;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-    }
-    
-    .btn-secondary {
-      background: #f1f5f9;
-      color: #475569;
-    }
-    
-    .btn-secondary:hover {
-      background: #e2e8f0;
-    }
-    
-    .btn-help {
-      background: #17a2b8;
-      color: #fff;
-    }
-    
-    .btn-help:hover {
-      background: #138496;
-    }
-    
-    /* Results */
-    .results-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-    
-    .result-card {
-      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      border: 1px solid #e2e8f0;
-    }
-    
-    .result-card h4 {
-      font-size: 13px;
-      color: #64748b;
-      margin-bottom: 8px;
-    }
-    
-    .result-card .value {
-      font-size: 24px;
-      font-weight: 700;
-      font-family: 'Consolas', monospace;
-    }
-    
-    .result-card .value.success {
-      color: #10b981;
-    }
-    
-    .result-card .value.warning {
-      color: #f59e0b;
-    }
-    
-    .result-card .value.danger {
-      color: #ef4444;
-    }
-    
-    .result-card .range {
-      font-size: 12px;
-      color: #94a3b8;
-      margin-top: 5px;
-    }
-    
-    /* Summary Box */
-    .summary-box {
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-    }
-    
-    .summary-box.pass {
-      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-      border: 2px solid #10b981;
-    }
-    
-    .summary-box.fail {
-      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-      border: 2px solid #ef4444;
-    }
-    
-    .summary-box.pending {
-      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-      border: 2px solid #94a3b8;
-    }
-    
-    .summary-box h3 {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-    
-    .summary-box.pass h3 {
-      color: #065f46;
-    }
-    
-    .summary-box.fail h3 {
-      color: #991b1b;
-    }
-    
-    .summary-box.pending h3 {
-      color: #475569;
-    }
-    
-    .summary-box p {
-      font-size: 14px;
-      color: #64748b;
-    }
-    
-    /* Modal */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .modal-overlay.active {
-      display: flex;
-    }
-    
-    .modal {
-      background: #fff;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 700px;
-      max-height: 85vh;
-      overflow: hidden;
-    }
-    
-    .modal-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-      padding: 20px 25px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .modal-header h2 {
-      font-size: 18px;
-    }
-    
-    .modal-close {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      color: #fff;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      font-size: 20px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .modal-close:hover {
-      background: rgba(255,255,255,0.3);
-    }
-    
-    .modal-body {
-      padding: 25px;
-      max-height: calc(85vh - 80px);
-      overflow-y: auto;
-    }
-    
-    .help-content {
-      font-size: 14px;
-      line-height: 1.8;
-      color: #475569;
-    }
-    
-    .help-content h4 {
-      color: #667eea;
-      margin: 20px 0 10px;
-      font-size: 15px;
-    }
-    
-    .help-content h4:first-child {
-      margin-top: 0;
-    }
-    
-    .help-content code {
-      background: #f1f5f9;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: 'Consolas', monospace;
-      color: #667eea;
-    }
-    
-    .help-content pre {
-      background: #f8fafc;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin: 10px 0;
-    }
-    
-    /* Footer */
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      padding: 20px;
-      color: rgba(255,255,255,0.7);
-      font-size: 13px;
-    }
-    
-    .page-footer {
-      text-align: center;
-      margin-top: 20px;
-      padding: 20px;
-      color: #94a3b8;
-      font-size: 13px;
-    }
-
-    /* ========== Campus Network Calculator Styles ========== */
-    .cn-header {
-      background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%);
-      color: #fff;
-      padding: 20px 30px;
-      border-radius: 16px 16px 0 0;
-    }
-    
-    .cn-header h1 {
-      font-size: 24px;
-      margin-bottom: 5px;
-    }
-    
-    .cn-header p {
-      font-size: 14px;
-      opacity: 0.8;
-    }
-    
-    .cn-card {
-      background: #fff;
-      border-radius: 0 0 16px 16px;
-      padding: 25px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    }
-    
-    .cn-section {
-      margin-bottom: 25px;
-      padding-bottom: 20px;
-      border-bottom: 1px dashed #e5e7eb;
-    }
-    
-    .cn-section:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-    
-    .cn-section-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: #1e3a5f;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .cn-section-title .num {
-      width: 24px;
-      height: 24px;
+    /* Form */
+    .section { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px dashed #e5e7eb; }
+    .section:last-child { border-bottom: none; margin-bottom: 0; }
+    .section-title {
+      font-size: 15px; font-weight: 600; color: #1e3a5f;
+      margin-bottom: 15px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-title .num {
+      width: 24px; height: 24px;
       background: linear-gradient(135deg, #667eea, #764ba2);
-      color: #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
       font-size: 12px;
     }
-    
-    .cn-form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 13px; color: #64748b; }
+    .form-group input, .form-group select {
+      padding: 10px 12px; border: 2px solid #e2e8f0;
+      border-radius: 8px; font-size: 14px; transition: all 0.3s;
     }
-    
-    @media (max-width: 600px) {
-      .cn-form-grid {
-        grid-template-columns: 1fr;
-      }
+    .form-group input:focus, .form-group select:focus {
+      outline: none; border-color: #667eea;
     }
+    .form-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .form-inline label { white-space: nowrap; }
     
-    .cn-form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    
-    .cn-form-group label {
-      font-size: 13px;
-      color: #64748b;
-    }
-    
-    .cn-form-group input,
-    .cn-form-group select {
-      padding: 10px 12px;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: all 0.3s;
-    }
-    
-    .cn-form-group input:focus,
-    .cn-form-group select:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-    
-    .cn-device-info {
-      background: #f8fafc;
-      padding: 12px 15px;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #475569;
+    /* Device Info */
+    .device-info {
+      background: #f8fafc; padding: 12px 15px;
+      border-radius: 8px; font-size: 13px; color: #475569;
       margin-top: 10px;
     }
-    
-    .cn-device-info strong {
-      color: #667eea;
+    .device-info strong { color: #667eea; }
+    .device-code { font-size: 11px; color: #94a3b8; margin-top: 5px; }
+    .loss-tag {
+      display: inline-block; padding: 4px 10px;
+      background: #fef3c7; color: #92400e;
+      border-radius: 4px; font-size: 12px; margin-left: 10px;
     }
     
-    .cn-loss-tag {
-      display: inline-block;
-      padding: 4px 10px;
-      background: #fef3c7;
-      color: #92400e;
-      border-radius: 4px;
-      font-size: 12px;
-      margin-left: 10px;
-    }
+    /* Radio Group */
+    .radio-group { display: flex; gap: 15px; }
+    .radio-group label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
     
-    .cn-result-summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
+    /* Results */
+    .result-summary {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;
+    }
+    @media (max-width: 600px) { .result-summary { grid-template-columns: 1fr; } }
+    .result-item {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 20px; border-radius: 12px; text-align: center;
+    }
+    .result-item h4 { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+    .result-item .value { font-size: 20px; font-weight: 700; font-family: 'Consolas', monospace; }
+    .result-item .value.pass { color: #10b981; }
+    .result-item .value.warn { color: #f59e0b; }
+    .result-item .value.fail { color: #ef4444; }
+    .result-item .range { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+    
+    /* Status Badge */
+    .status-badge {
+      display: inline-block; padding: 10px 25px;
+      border-radius: 25px; font-weight: 600; font-size: 14px;
       margin-top: 20px;
     }
+    .status-badge.pass { background: #d1fae5; color: #065f46; }
+    .status-badge.fail { background: #fee2e2; color: #991b1b; }
+    .status-badge.warn { background: #fef3c7; color: #92400e; }
+    .status-badge.pending { background: #f1f5f9; color: #64748b; }
     
-    @media (max-width: 600px) {
-      .cn-result-summary {
-        grid-template-columns: 1fr;
-      }
+    /* Loss Breakdown */
+    .loss-breakdown {
+      background: #f8fafc; border-radius: 12px;
+      padding: 20px; margin-top: 20px;
     }
+    .loss-breakdown h4 { font-size: 14px; color: #374151; margin-bottom: 15px; }
+    .loss-item {
+      display: flex; justify-content: space-between; padding: 8px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .loss-item:last-child { border-bottom: none; font-weight: 600; }
+    .loss-item span:last-child { font-family: 'Consolas', monospace; }
     
-    .cn-result-item {
+    /* Buttons */
+    .btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+    .btn {
+      padding: 14px 35px; border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s;
+    }
+    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4); }
+    .btn-secondary { background: #f1f5f9; color: #475569; }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .btn-help { background: #17a2b8; color: #fff; }
+    .btn-help:hover { background: #138496; }
+    
+    /* Judgment Result */
+    .judgment-result {
+      background: #f8fafc; border-radius: 12px;
+      padding: 20px; margin-top: 20px; font-size: 14px;
+    }
+    .judgment-result h4 { margin-bottom: 15px; color: #374151; }
+    .judgment-line { padding: 6px 0; }
+    .judgment-line.pass { color: #065f46; font-weight: 600; }
+    .judgment-line.fail { color: #991b1b; font-weight: 600; }
+    .judgment-line.warn { color: #92400e; }
+    
+    /* Small PON Specific */
+    .device-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    @media (max-width: 768px) { .device-grid { grid-template-columns: 1fr; } }
+    .device-card {
       background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-      padding: 20px;
-      border-radius: 12px;
+      border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0;
+    }
+    .device-card h3 { font-size: 14px; color: #64748b; margin-bottom: 12px; }
+    .device-card select {
+      width: 100%; padding: 12px 15px;
+      border: 2px solid #e2e8f0; border-radius: 8px;
+      font-size: 14px; background: #fff; cursor: pointer;
+    }
+    .device-card select:focus { outline: none; border-color: #667eea; }
+    
+    .splitter-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    .splitter-table th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff; padding: 14px 10px; font-size: 13px; font-weight: 500;
       text-align: center;
     }
-    
-    .cn-result-item h4 {
-      font-size: 12px;
-      color: #64748b;
-      margin-bottom: 8px;
+    .splitter-table th:first-child { border-radius: 8px 0 0 0; }
+    .splitter-table th:last-child { border-radius: 0 8px 0 0; }
+    .splitter-table td {
+      padding: 12px 10px; text-align: center;
+      border-bottom: 1px solid #f1f5f9; font-size: 13px;
     }
-    
-    .cn-result-item .value {
-      font-size: 20px;
-      font-weight: 700;
-      font-family: 'Consolas', monospace;
+    .splitter-table tr:nth-child(even) { background: #f8fafc; }
+    .splitter-table tr:hover { background: #f1f5f9; }
+    .splitter-table select {
+      width: 100%; padding: 8px; border: 1px solid #e2e8f0;
+      border-radius: 6px; font-size: 13px; background: #fff;
     }
-    
-    .cn-result-item .value.pass { color: #10b981; }
-    .cn-result-item .value.warn { color: #f59e0b; }
-    .cn-result-item .value.fail { color: #ef4444; }
-    
-    .cn-status-badge {
-      display: inline-block;
-      padding: 8px 20px;
-      border-radius: 25px;
-      font-weight: 600;
-      font-size: 14px;
+    .level-cell { font-weight: 600; color: #667eea; }
+    .loss-cell { font-family: 'Consolas', monospace; color: #64748b; }
+    .power-cell { font-family: 'Consolas', monospace; font-weight: 600; }
+    .rx-power { color: #10b981; }
+    .status-pass { color: #10b981; font-weight: 600; }
+    .status-fail { color: #ef4444; font-weight: 600; }
+    .status-pending { color: #94a3b8; }
+    .del-btn {
+      background: #ef4444; color: #fff; border: none;
+      width: 28px; height: 28px; border-radius: 6px;
+      cursor: pointer; font-size: 16px; font-weight: bold;
+    }
+    .del-btn:hover { background: #dc2626; }
+    .add-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff; border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 500; cursor: pointer;
       margin-top: 15px;
     }
+    .add-btn:hover { transform: translateY(-2px); }
     
-    .cn-status-badge.pass {
-      background: #d1fae5;
-      color: #065f46;
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+    .result-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 12px; padding: 20px; text-align: center;
+      border: 1px solid #e2e8f0;
     }
+    .result-card h4 { font-size: 13px; color: #64748b; margin-bottom: 8px; }
+    .result-card .value { font-size: 24px; font-weight: 700; font-family: 'Consolas', monospace; }
+    .result-card .value.success { color: #10b981; }
+    .result-card .value.danger { color: #ef4444; }
+    .result-card .range { font-size: 12px; color: #94a3b8; margin-top: 5px; }
     
-    .cn-status-badge.fail {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+    .summary-box { padding: 20px; border-radius: 12px; text-align: center; }
+    .summary-box.pass { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 2px solid #10b981; }
+    .summary-box.fail { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border: 2px solid #ef4444; }
+    .summary-box.pending { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border: 2px solid #94a3b8; }
+    .summary-box h3 { font-size: 20px; margin-bottom: 10px; }
+    .summary-box.pass h3 { color: #065f46; }
+    .summary-box.fail h3 { color: #991b1b; }
+    .summary-box.pending h3 { color: #475569; }
+    .summary-box p { font-size: 14px; color: #64748b; }
     
-    .cn-status-badge.pending {
-      background: #f1f5f9;
-      color: #64748b;
-    }
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: #fff; border-radius: 16px; width: 90%; max-width: 700px; max-height: 85vh; overflow: hidden; }
+    .modal-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h2 { font-size: 18px; }
+    .modal-close { background: rgba(255,255,255,0.2); border: none; color: #fff; width: 32px; height: 32px; border-radius: 8px; font-size: 20px; cursor: pointer; }
+    .modal-close:hover { background: rgba(255,255,255,0.3); }
+    .modal-body { padding: 25px; max-height: calc(85vh - 80px); overflow-y: auto; }
+    .help-content { font-size: 14px; line-height: 1.8; color: #475569; }
+    .help-content h4 { color: #667eea; margin: 20px 0 10px; font-size: 15px; }
+    .help-content h4:first-child { margin-top: 0; }
+    .help-content pre { background: #f8fafc; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 10px 0; }
+    
+    .footer { text-align: center; margin-top: 20px; padding: 20px; color: rgba(255,255,255,0.7); font-size: 13px; }
+    .page-footer { text-align: center; margin-top: 20px; padding: 20px; color: #94a3b8; font-size: 13px; }
   </style>
 </head>
 <body>
@@ -859,40 +319,33 @@
       <h1>PON光功率计算器</h1>
       <p>新华三PON网络光功率预算解决方案</p>
     </div>
-    
     <div class="module-grid">
-      <!-- 园区光模块 -->
       <div class="module-card" onclick="openModule('campus')">
         <div class="module-icon">🏢</div>
-        <h2>园区光计算器</h2>
+        <h2>园区光光功率计算器</h2>
         <p>适用于园区网络场景，支持XGSPON/XGPON/GPON/EPON/XEPON多种网络类型，可配置OLT光模块、ONU设备、分光比、光纤长度、熔接点等详细参数。</p>
         <div class="module-tags">
           <span class="module-tag">OLT模块</span>
           <span class="module-tag">ONU设备</span>
-          <span class="module-tag">多网络制式</span>
+          <span class="module-tag">多级分光器</span>
           <span class="module-tag">光纤损耗</span>
         </div>
         <span class="enter-btn">进入计算器 →</span>
       </div>
-      
-      <!-- 小全光模块 -->
       <div class="module-card" onclick="openModule('small')">
         <div class="module-icon">🏠</div>
-        <h2>小全光计算器</h2>
-        <p>适用于小全光网络场景，支持光网关与光AP/光交换组合，可配置1x2~1x64无源分光器和1x5/1x9有源分光器，支持多级级联。</p>
+        <h2>小全光光功率计算器</h2>
+        <p>适用于小全光网络场景，支持光网关与光AP/光交换组合，可配置1x2~1x32无源分光器和1x5/1x9有源分光器，支持多级级联。</p>
         <div class="module-tags">
           <span class="module-tag">光网关</span>
           <span class="module-tag">光AP/光交换</span>
-          <span class="module-tag">无源分光</span>
-          <span class="module-tag">有源分光</span>
+          <span class="module-tag">无源分光器</span>
+          <span class="module-tag">有源分光器</span>
         </div>
         <span class="enter-btn">进入计算器 →</span>
       </div>
     </div>
-    
-    <div class="footer">
-      © 2024 新华三PON光功率计算器综合版 | 支持园区光 & 小全光场景
-    </div>
+    <div class="footer">© 2024 新华三PON光功率计算器综合版 | 支持园区光 & 小全光场景</div>
   </div>
 
   <!-- ========== Campus Network Calculator ========== -->
@@ -900,119 +353,112 @@
     <div class="container">
       <button class="back-btn" onclick="goHome()">← 返回首页</button>
       
-      <div class="cn-header">
-        <h1>🏢 园区光网络光功率计算器</h1>
-        <p>Campus PON Optical Power Budget Calculator V2.1</p>
-      </div>
-      
-      <div class="cn-card">
+      <div class="card">
+        <div class="card-title">🏢 园区光网络光功率计算器</div>
+        
         <!-- Network Type -->
-        <div class="cn-section">
-          <div class="cn-section-title">
-            <span class="num">1</span>
-            选择网络制式
-          </div>
-          <div class="cn-form-grid">
-            <div class="cn-form-group">
-              <label>网络类型 Network Type:</label>
-              <select id="cn_networkType" onchange="cn_updateOLTList()">
-                <option value="XGSPON">XGSPON</option>
-                <option value="XGPON">XGPON</option>
-                <option value="GPON">GPON</option>
-                <option value="EPON">EPON</option>
-                <option value="XEPON">XEPON</option>
-              </select>
-            </div>
+        <div class="section">
+          <div class="section-title"><span class="num">1</span>选择网络制式</div>
+          <div class="form-group">
+            <label>Network Type:</label>
+            <select id="cn_networkType" onchange="cn_onNetworkTypeChange()">
+              <option value="XGSPON">XGSPON</option>
+              <option value="XGPON">XGPON</option>
+              <option value="GPON">GPON</option>
+              <option value="EPON">EPON</option>
+              <option value="XEPON">XEPON</option>
+            </select>
           </div>
         </div>
         
         <!-- OLT Module -->
-        <div class="cn-section">
-          <div class="cn-section-title">
-            <span class="num">2</span>
-            OLT光模块选择
+        <div class="section">
+          <div class="section-title"><span class="num">2</span>OLT光模块选择</div>
+          <div class="form-group">
+            <label>Select Module:</label>
+            <select id="cn_oltModule" onchange="cn_updateOLTInfo()"></select>
           </div>
-          <div class="cn-form-grid">
-            <div class="cn-form-group">
-              <label>选择模块:</label>
-              <select id="cn_oltModule" onchange="cn_updateOLTInfo()"></select>
-            </div>
-            <div class="cn-form-group">
-              <label>分光比:</label>
-              <select id="cn_splitterRatio" onchange="cn_updateSplitterLoss()">
-                <option value="1x2">1:2</option>
-                <option value="1x4">1:4</option>
-                <option value="1x8">1:8</option>
-                <option value="1x16">1:16</option>
-                <option value="1x32">1:32</option>
-                <option value="1x64">1:64</option>
-                <option value="2x2">2:2</option>
-                <option value="2x4">2:4</option>
-                <option value="2x8">2:8</option>
-                <option value="2x16">2:16</option>
-                <option value="2x32">2:32</option>
-                <option value="2x64">2:64</option>
-              </select>
-            </div>
-          </div>
-          <div class="cn-device-info" id="cn_oltInfo">请选择OLT模块</div>
+          <div class="device-info" id="cn_oltInfo">请选择OLT模块</div>
         </div>
         
         <!-- ONU Device -->
-        <div class="cn-section">
-          <div class="cn-section-title">
-            <span class="num">3</span>
-            ONU设备选择
+        <div class="section">
+          <div class="section-title"><span class="num">3</span>ONU设备选择</div>
+          <div class="form-group">
+            <label>Select ONU Device:</label>
+            <select id="cn_onuModule" onchange="cn_updateONUInfo()"></select>
           </div>
-          <div class="cn-form-grid">
-            <div class="cn-form-group">
-              <label>选择ONU设备:</label>
-              <select id="cn_onuModule" onchange="cn_updateONUInfo()"></select>
-            </div>
+          <div class="device-info" id="cn_onuInfo">请选择ONU设备</div>
+        </div>
+        
+        <!-- Splitter Settings -->
+        <div class="section">
+          <div class="section-title"><span class="num">4</span>分光器设置</div>
+          <div class="form-inline">
+            <label>Split Ratio:</label>
+            <select id="cn_splitter" onchange="cn_updateSplitterInfo()">
+              <option value="">-- Select --</option>
+              <option value="1x2">1x2</option>
+              <option value="2x2">2x2</option>
+              <option value="1x4">1x4</option>
+              <option value="2x4">2x4</option>
+              <option value="1x8">1x8</option>
+              <option value="2x8">2x8</option>
+              <option value="1x16">1x16</option>
+              <option value="2x16">2x16</option>
+              <option value="1x32">1x32</option>
+              <option value="2x32">2x32</option>
+              <option value="1x64">1x64</option>
+              <option value="2x64">2x64</option>
+            </select>
+            <span class="loss-tag" id="cn_splitterLoss">Loss: -- dB</span>
           </div>
-          <div class="cn-device-info" id="cn_onuInfo">请选择ONU设备</div>
+          <div class="form-inline" style="margin-top: 10px;">
+            <label>Attenuator (dB):</label>
+            <input type="number" id="cn_attenuator" value="0" min="0" step="0.1" onchange="cn_calculate()">
+          </div>
         </div>
         
         <!-- Fiber Length -->
-        <div class="cn-section">
-          <div class="cn-section-title">
-            <span class="num">4</span>
-            光纤长度
-          </div>
-          <div class="cn-form-grid">
-            <div class="cn-form-group">
-              <label>OLT → 分光器 (km):</label>
-              <input type="number" id="cn_fiberOlt" value="0" min="0" step="0.1" onchange="cn_calculate()">
-              <span class="cn-loss-tag" id="cn_fiberOltLoss">损耗: 0 dB</span>
+        <div class="section">
+          <div class="section-title"><span class="num">5</span>光纤长度</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>OLT → Splitter (km):</label>
+              <div class="form-inline">
+                <input type="number" id="cn_fiberOlt" value="0" min="0" step="0.1" onchange="cn_updateFiberLoss()">
+                <span class="loss-tag" id="cn_fiberOltLoss">Loss: 0.000 dB</span>
+              </div>
             </div>
-            <div class="cn-form-group">
-              <label>分光器 → ONU (km):</label>
-              <input type="number" id="cn_fiberOnu" value="0" min="0" step="0.1" onchange="cn_calculate()">
-              <span class="cn-loss-tag" id="cn_fiberOnuLoss">损耗: 0 dB</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Additional Loss -->
-        <div class="cn-section">
-          <div class="cn-section-title">
-            <span class="num">5</span>
-            额外损耗
-          </div>
-          <div class="cn-form-grid">
-            <div class="cn-form-group">
-              <label>活动连接器 (个):</label>
-              <input type="number" id="cn_connectors" value="2" min="0" max="10" onchange="cn_calculate()">
-              <span class="cn-loss-tag" id="cn_connectorLoss">损耗: 0.6 dB</span>
-            </div>
-            <div class="cn-form-group">
-              <label>额外衰减器 (dB):</label>
-              <input type="number" id="cn_attenuator" value="0" min="0" step="0.1" onchange="cn_calculate()">
+            <div class="form-group">
+              <label>Splitter → ONU (km):</label>
+              <div class="form-inline">
+                <input type="number" id="cn_fiberOnu" value="0" min="0" step="0.1" onchange="cn_updateFiberLoss()">
+                <span class="loss-tag" id="cn_fiberOnuLoss">Loss: 0.000 dB</span>
+              </div>
             </div>
           </div>
         </div>
         
-        <!-- Calculate Button -->
+        <!-- Fusion & Patch -->
+        <div class="section">
+          <div class="section-title"><span class="num">6</span>熔接与跳纤</div>
+          <div class="form-inline">
+            <label>Patch Stages:</label>
+            <input type="number" id="cn_fusionStages" value="0" min="0" max="20" onchange="cn_updateFusionLoss()">
+            <span class="loss-tag" id="cn_fusionLoss">(Loss: 0.00 dB)</span>
+          </div>
+          <div class="form-inline" style="margin-top: 10px;">
+            <label>Connector Type:</label>
+            <div class="radio-group">
+              <label><input type="radio" name="cn_connector" value="UPC" checked onchange="cn_updateConnectorLoss()"> UPC</label>
+              <label><input type="radio" name="cn_connector" value="APC" onchange="cn_updateConnectorLoss()"> APC</label>
+            </div>
+            <span class="loss-tag" id="cn_connectorLoss">(0 pcs, Loss: 0.00 dB)</span>
+          </div>
+        </div>
+        
+        <!-- Buttons -->
         <div class="btn-group">
           <button class="btn btn-primary" onclick="cn_calculate()">开始计算</button>
           <button class="btn btn-secondary" onclick="cn_reset()">重置</button>
@@ -1021,16 +467,61 @@
         
         <!-- Results -->
         <div id="cn_results" style="display: none; margin-top: 25px;">
-          <div class="cn-result-summary" id="cn_resultSummary"></div>
-          <div style="text-align: center;">
-            <span class="cn-status-badge pending" id="cn_statusBadge">请点击计算</span>
+          <div class="loss-breakdown">
+            <h4>损耗明细 Loss Breakdown</h4>
+            <div class="loss-item">
+              <span>光纤损耗 (OLT→Splitter)</span>
+              <span id="cn_lossFiberOlt">0.000 dB</span>
+            </div>
+            <div class="loss-item">
+              <span>分光器损耗</span>
+              <span id="cn_lossSplitter">0.0 dB</span>
+            </div>
+            <div class="loss-item">
+              <span>光纤损耗 (Splitter→ONU)</span>
+              <span id="cn_lossFiberOnu">0.000 dB</span>
+            </div>
+            <div class="loss-item">
+              <span>衰减器</span>
+              <span id="cn_lossAttenuator">0.0 dB</span>
+            </div>
+            <div class="loss-item">
+              <span>熔接损耗</span>
+              <span id="cn_lossFusion">0.00 dB</span>
+            </div>
+            <div class="loss-item">
+              <span>连接器损耗</span>
+              <span id="cn_lossConnector">0.00 dB</span>
+            </div>
+            <div class="loss-item" style="color: #667eea;">
+              <span>总损耗 Total Loss</span>
+              <span id="cn_totalLoss" style="color: #667eea;">0.00 dB</span>
+            </div>
           </div>
+          
+          <div class="result-summary">
+            <div class="result-item">
+              <h4>OLT侧接收功率</h4>
+              <div class="value" id="cn_oltRxAvg">-- dBm</div>
+              <div class="range" id="cn_oltRxRange">(-- ~ --)</div>
+            </div>
+            <div class="result-item">
+              <h4>ONU侧接收功率</h4>
+              <div class="value" id="cn_onuRxAvg">-- dBm</div>
+              <div class="range" id="cn_onuRxRange">(-- ~ --)</div>
+            </div>
+            <div class="result-item">
+              <h4>总损耗</h4>
+              <div class="value" id="cn_totalLossDisplay">-- dB</div>
+              <div class="range">功率预算</div>
+            </div>
+          </div>
+          
+          <div class="judgment-result" id="cn_judgmentResult"></div>
         </div>
       </div>
       
-      <div class="page-footer">
-        © 2024 园区光网络光功率计算器 V2.1
-      </div>
+      <div class="page-footer">© 2024 园区光网络光功率计算器 V2.1</div>
     </div>
   </div>
 
@@ -1039,14 +530,9 @@
     <div class="container">
       <button class="back-btn" onclick="goHome()">← 返回首页</button>
       
-      <div class="header">
-        <h1>🏠 小全光网络光功率计算器</h1>
-        <p>H3C Mini PON Optical Power Calculator V2.0</p>
-      </div>
-      
-      <!-- Device Selection -->
       <div class="card">
-        <div class="card-title">设备选择</div>
+        <div class="card-title">🏠 小全光网络光功率计算器</div>
+        
         <div class="device-grid">
           <div class="device-card">
             <h3>光网关型号</h3>
@@ -1076,7 +562,6 @@
         </div>
       </div>
       
-      <!-- ODN Configuration -->
       <div class="card">
         <div class="card-title">ODN网络配置</div>
         <table class="splitter-table">
@@ -1099,14 +584,12 @@
         </button>
       </div>
       
-      <!-- Buttons -->
       <div class="btn-group">
         <button class="btn btn-primary" onclick="sm_calculate()">开始计算</button>
         <button class="btn btn-secondary" onclick="sm_reset()">重置</button>
         <button class="btn btn-help" onclick="sm_showHelp()">帮助说明</button>
       </div>
       
-      <!-- Results -->
       <div class="card" id="sm_resultsCard" style="display: none;">
         <div class="card-title">计算结果</div>
         <div class="results-grid" id="sm_resultsGrid"></div>
@@ -1116,9 +599,7 @@
         </div>
       </div>
       
-      <div class="page-footer">
-        © 2024 小全光网络光功率计算器 V2.0
-      </div>
+      <div class="page-footer">© 2024 小全光网络光功率计算器 V2.0</div>
     </div>
   </div>
 
@@ -1142,7 +623,6 @@
     
     function openModule(module) {
       document.getElementById('homePage').style.display = 'none';
-      
       if (module === 'campus') {
         document.getElementById('campusPage').classList.add('active');
         cn_init();
@@ -1150,7 +630,6 @@
         document.getElementById('smallPage').classList.add('active');
         sm_init();
       }
-      
       window.scrollTo(0, 0);
     }
     
@@ -1160,201 +639,482 @@
       document.getElementById('smallPage').classList.remove('active');
       window.scrollTo(0, 0);
     }
-    
+
     // ============================================
-    // Campus Network Calculator - Data
+    // Campus Network Calculator - Data (from original file)
     // ============================================
     
     const CN_OLT_MODULES = {
-      'XGSPON': [
-        { name: 'EGS8125', tx: 4, rx: -28, power: '9dBm Class N1/N2' },
-        { name: 'EGS8125S', tx: 6, rx: -30, power: '12dBm Class C+/N2' },
-        { name: 'EGS8125D', tx: 9, rx: -30, power: '15dBm Class C++' },
+      "XGSPON": [
+        "XGSPON COMBO(工作在XGSPON)",
+        "XGSPON COMBO(工作在XGPON)",
+        "XGSPON COMBO(工作在GPON)",
+        "XGSPON N2 (工作在XGSPON)",
+        "XGSPON N2 (工作在XGPON)",
+        "XGSPON E1 (工作在XGSPON)",
+        "XGSPON E1 (工作在XGPON)",
       ],
-      'XGPON': [
-        { name: 'EGS5024', tx: 3, rx: -28, power: '8dBm Class N1' },
-        { name: 'EGS5024S', tx: 6, rx: -30, power: '11dBm Class C+' },
+      "XGPON": [
+        "XGPON COMBO(工作在XGPON)",
+        "XGPON COMBO(工作在GPON)",
+        "XGSPON COMBO(工作在XGPON)",
+        "XGSPON N2 (工作在XGPON)",
+        "XGSPON E1 (工作在XGPON)",
       ],
-      'GPON': [
-        { name: 'EGS2004', tx: 1.5, rx: -28, power: '5dBm Class B+' },
-        { name: 'EGS2004S', tx: 5, rx: -30, power: '10dBm Class C+' },
-        { name: 'EGS2004D', tx: 8, rx: -30, power: '13dBm Class C++' },
+      "GPON": [
+        "GPON-CLASS C+",
+        "GPON-CLASS B+",
+        "XGPON COMBO(工作在GPON)",
+        "XGSPON COMBO(工作在GPON)",
       ],
-      'EPON': [
-        { name: 'EES2004F', tx: 2, rx: -27, power: '7dBm' },
-        { name: 'EES2004N', tx: 4, rx: -27, power: '9dBm' },
+      "EPON": [
+        "EPON-PX20",
+        "XEPON(工作在EPON)-PR40",
+        "XEPON(工作在EPON)-PR30",
       ],
-      'XEPON': [
-        { name: 'EES4024G', tx: 3, rx: -28, power: '8dBm' },
-        { name: 'EES4024GS', tx: 7, rx: -30, power: '12dBm' },
-      ]
+      "XEPON": [
+        "XEPON-PR40",
+        "XEPON-PR30",
+        "XEPON(工作在EPON)-PR40",
+        "XEPON(工作在EPON)-PR30",
+      ],
     };
     
-    const CN_ONU_DEVICES = [
-      { name: 'EA5802', type: 'OLT', rx: -27, sat: -8 },
-      { name: 'EA5801', type: 'OLT', rx: -27, sat: -8 },
-      { name: 'EA5800', type: 'OLT', rx: -27, sat: -8 },
-      { name: 'EA5824', type: 'OLT', rx: -28, sat: -8 },
-      { name: 'EA5822', type: 'OLT', rx: -28, sat: -8 },
-      { name: 'EA5820', type: 'OLT', rx: -28, sat: -8 },
-      { name: 'EGS8048', type: 'OLT', rx: -28, sat: -8 },
-      { name: 'EGS8040', type: 'OLT', rx: -28, sat: -8 },
-      { name: 'EGS2024', type: 'OLT', rx: -27, sat: -8 },
-      { name: 'EGS2012', type: 'OLT', rx: -27, sat: -8 },
-      { name: 'EGS2008', type: 'OLT', rx: -27, sat: -8 },
-      { name: 'EES2004F', type: 'OLT', rx: -27, sat: -8 },
-      { name: 'EES2004N', type: 'OLT', rx: -27, sat: -8 },
-      { name: 'EES2012N', type: 'OLT', rx: -27, sat: -8 },
-      { name: 'EES2024N', type: 'OLT', rx: -27, sat: -8 },
-    ];
+    const CN_OLT_PARAMS = {
+      "XGSPON COMBO(工作在XGSPON)": { tx_max: 8, tx_min: 5, rx_sens: -29, sat_power: -8, code: "0231AKBN" },
+      "XGSPON COMBO(工作在XGPON)": { tx_max: 8, tx_min: 5, rx_sens: -30.5, sat_power: -10, code: "0231AKBN" },
+      "XGSPON COMBO(工作在GPON)": { tx_max: 9, tx_min: 4.5, rx_sens: -31, sat_power: -5, code: "0231AKBN" },
+      "XGSPON N2 (工作在XGSPON)": { tx_max: 7, tx_min: 4, rx_sens: -28, sat_power: -7, code: "0231AKBQ" },
+      "XGSPON N2 (工作在XGPON)": { tx_max: 7, tx_min: 4, rx_sens: -29.5, sat_power: -9, code: "0231AKBQ" },
+      "XGSPON E1 (工作在XGSPON)": { tx_max: 9, tx_min: 6, rx_sens: -30, sat_power: -9, code: "0231AKBR" },
+      "XGSPON E1 (工作在XGPON)": { tx_max: 9, tx_min: 6, rx_sens: -31.5, sat_power: -11, code: "0231AKBR" },
+      "XGPON COMBO(工作在XGPON)": { tx_max: 8, tx_min: 4, rx_sens: -29.5, sat_power: -8, code: "0231AKBP" },
+      "XGPON COMBO(工作在GPON)": { tx_max: 7, tx_min: 3, rx_sens: -30, sat_power: -12, code: "0231AKBP" },
+      "GPON-CLASS C+": { tx_max: 7, tx_min: 3, rx_sens: -30, sat_power: -12, code: "9801A3HF" },
+      "GPON-CLASS B+": { tx_max: 5, tx_min: 1.5, rx_sens: -28, sat_power: -8, code: "9801A3HG" },
+      "EPON-PX20": { tx_max: 7, tx_min: 2, rx_sens: -28, sat_power: -6, code: "0231A0J7" },
+      "XEPON-PR40": { tx_max: 9, tx_min: 5, rx_sens: -29, sat_power: -9, code: "0231AHW3" },
+      "XEPON-PR30": { tx_max: 5, tx_min: 2, rx_sens: -28, sat_power: -6, code: "0231AHW4" },
+      "XEPON(工作在EPON)-PR40": { tx_max: 10, tx_min: 4, rx_sens: -29, sat_power: -9, code: "0231AHW3" },
+      "XEPON(工作在EPON)-PR30": { tx_max: 7, tx_min: 2, rx_sens: -30, sat_power: -9.3, code: "0231AHW4" },
+    };
+    
+    const CN_ONU_MODULES = {
+      "XGSPON": [
+        "GTH904-TW (XGSPON)",
+        "EGT904-H-TW (工作在XGSPON)",
+        "EGT924-H-R (工作在XGSPON)",
+        "EGT904-H-TWF (工作在XGSPON)",
+        "EGT901C-H-7WF (工作在XGSPON)",
+        "EGT904-H-T7WF (工作在XGSPON)",
+        "EGT910-H-PD (工作在XGSPON)",
+        "SFP(ONU)-XGSPON",
+        "SFP(ONU)-XGPON",
+      ],
+      "XGPON": [
+        "GT904-4TW (XGPON)",
+        "GT908-8TWA (XGPON)",
+        "FM104-TW (工作在XGPON)",
+        "SFP(ONU)-XGPON",
+      ],
+      "GPON": [
+        "WA6520H-EGPON(工作在GPON)",
+        "EGT358-P (工作在GPON)",
+        "EGT358-POTS (工作在GPON)",
+        "EGT354 (工作在GPON)",
+        "EGT354-P (工作在GPON)",
+        "EGT302 (工作在GPON)",
+        "EGT301-T (工作在GPON)",
+        "EGT304-2T(工作在GPON)",
+        "ET304-B (工作在GPON)",
+        "EGT304 (工作在GPON)",
+        "EGT304-TWB (工作在GPON)",
+        "EGT304-TWF (工作在GPON)",
+        "EGT308-H-T7W (工作在GPON)",
+        "EGT358-PA (工作在GPON)",
+        "SFP(ONU)-GPON C+",
+        "SFP(ONU)-GPON B+",
+        "FS102-W (GPON)",
+      ],
+      "EPON": [
+        "WA6520H-EGPON(工作在EPON)",
+        "ET358-POTS (EPON)",
+        "ET354-P (EPON)",
+        "ET358-P (EPON)",
+        "EGT358-P (工作在EPON)",
+        "EGT358-POTS (工作在EPON)",
+        "EGT354 (工作在EPON)",
+        "EGT354-P (工作在EPON)",
+        "ET304 (EPON)",
+        "ET304-C (EPON)",
+        "ET354 (EPON)",
+        "ET824-E-A (EPON)",
+        "ET354S-A (EPON)",
+        "ET354S-P (EPON)",
+        "ET358S-P (EPON)",
+        "EGT302 (工作在EPON)",
+        "EGT301-T (工作在EPON)",
+        "EGT304-2T(工作在EPON)",
+        "EGT358-R (工作在BOSA EPON)",
+        "ET304-B (工作在EPON)",
+        "EGT304 (工作在EPON)",
+        "EGT304-TWB (工作在EPON)",
+        "EGT304-TWF (工作在EPON)",
+        "EGT308-H-T7W (工作在EPON)",
+        "EGT358-PA (工作在EPON)",
+      ],
+      "XEPON": [
+        "WA6320H-XEPON",
+        "ET916-A (XEPON)",
+        "ET916-H-A (XEPON)",
+        "ET924-H-POE (XEPON)",
+        "ET904-A (XEPON)",
+        "ET904-H (XEPON)",
+        "ET904-H-P (XEPON)",
+        "ET908-H-P (XEPON)",
+        "ET908-H-POE-W (XEPON)",
+        "ET908-H-PQ (XEPON)",
+        "ET908-H-PD (XEPON)",
+        "EGT904-H-TW (工作在XEPON)",
+        "ET908-H-8TW (XEPON)",
+        "FM104-TW (工作在XEPON)",
+        "EGT904-H-TWF (工作在XEPON)",
+        "EGT924-H-R (工作在XEPON)",
+        "EGT901C-H-7WF (工作在XEPON)",
+        "EGT904-H-T7WF (工作在XEPON)",
+        "EGT910-H-PD (工作在XEPON)",
+        "SFP(ONU)-XEPON PR40",
+        "SFP(ONU)-XEPON PR30",
+      ],
+    };
+    
+    const CN_ONU_PARAMS = {
+      "GTH904-TW (XGSPON)": { tx_max: 4, tx_min: 3, rx_sens: -28, sat_power: -8, code: "9801A4EJ" },
+      "EGT904-H-TW (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A4EH" },
+      "EGT924-H-R (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A456" },
+      "EGT904-H-TWF (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A5JP" },
+      "EGT901C-H-7WF (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A8X2" },
+      "EGT904-H-T7WF (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A8X3" },
+      "EGT910-H-PD (工作在XGSPON)": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "9801A8X1" },
+      "GT904-4TW (XGPON)": { tx_max: 6, tx_min: 3, rx_sens: -28, sat_power: -8, code: "9801A450" },
+      "GT908-8TWA (XGPON)": { tx_max: 6, tx_min: 3, rx_sens: -28, sat_power: -8, code: "9801A44Y" },
+      "FM104-TW (工作在XGPON)": { tx_max: 6, tx_min: 3, rx_sens: -28, sat_power: -8, code: "9801A4KX" },
+      "SFP(ONU)-XGSPON": { tx_max: 9, tx_min: 4, rx_sens: -28, sat_power: -9, code: "0231AK3T" },
+      "SFP(ONU)-XGPON": { tx_max: 7, tx_min: 2, rx_sens: -28, sat_power: -8, code: "0231AK3R" },
+      "SFP(ONU)-GPON C+": { tx_max: 5, tx_min: 0.5, rx_sens: -30, sat_power: -8, code: "0231AK3P" },
+      "SFP(ONU)-GPON B+": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "0231AK3U" },
+      "SFP(ONU)-XEPON PR40": { tx_max: 9, tx_min: 6, rx_sens: -29.5, sat_power: -9, code: "0231AK3Q" },
+      "SFP(ONU)-XEPON PR30": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "0231AK3S" },
+      "WA6520H-EGPON(工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A3HK" },
+      "EGT358-P (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -27, sat_power: -8, code: "9801A3GW" },
+      "EGT358-POTS (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -27, sat_power: -8, code: "9801A3GX" },
+      "EGT354 (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A3GP" },
+      "EGT354-P (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A3GN" },
+      "EGT302 (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A3GY" },
+      "EGT301-T (工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4C7" },
+      "EGT304-2T(工作在GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4C8" },
+      "ET304-B (工作在GPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4BS" },
+      "EGT304 (工作在GPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4BT" },
+      "EGT304-TWB (工作在GPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4Q3" },
+      "EGT304-TWF (工作在GPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A5JN" },
+      "EGT308-H-T7W (工作在GPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -27, sat_power: -8, code: "9801A8X4" },
+      "EGT358-PA (工作在GPON)": { tx_max: 4.5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A8X0" },
+      "FS102-W (GPON)": { tx_max: 5, tx_min: 0.5, rx_sens: -28, sat_power: -8, code: "9801A4KW" },
+      "WA6520H-EGPON(工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3HK" },
+      "ET358-POTS (EPON)": { tx_max: 3.5, tx_min: 1.5, rx_sens: -28.5, sat_power: -7, code: "9801A25V" },
+      "ET354-P (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A2YE" },
+      "ET358-P (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A2YB" },
+      "EGT358-P (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GW" },
+      "EGT358-POTS (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GX" },
+      "EGT354 (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GP" },
+      "EGT354-P (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GN" },
+      "ET304 (EPON)": { tx_max: 4, tx_min: -1, rx_sens: -26.5, sat_power: -6, code: "9801A3GD" },
+      "ET304-C (EPON)": { tx_max: 4, tx_min: -1, rx_sens: -26.5, sat_power: -6, code: "9801A3PE" },
+      "ET354 (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GE" },
+      "ET824-E-A (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GA" },
+      "ET354S-A (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3J6" },
+      "ET354S-P (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3J5" },
+      "ET358S-P (EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3J7" },
+      "EGT302 (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A3GY" },
+      "EGT301-T (工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A4C7" },
+      "EGT304-2T(工作在EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A4C8" },
+      "EGT358-R (工作在BOSA EPON)": { tx_max: 4, tx_min: 0, rx_sens: -27, sat_power: -3, code: "9801A455" },
+      "ET304-B (工作在EPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -3, code: "9801A4BS" },
+      "EGT304 (工作在EPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -3, code: "9801A4BT" },
+      "EGT304-TWB (工作在EPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -3, code: "9801A4Q3" },
+      "EGT304-TWF (工作在EPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -28, sat_power: -3, code: "9801A5JN" },
+      "EGT308-H-T7W (工作在EPON)": { tx_max: 4, tx_min: 0.5, rx_sens: -27, sat_power: -3, code: "9801A8X4" },
+      "EGT358-PA (工作在EPON)": { tx_max: 4.5, tx_min: 0.5, rx_sens: -28, sat_power: -3, code: "9801A8X0" },
+      "WA6320H-XEPON": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A2JD" },
+      "ET916-A (XEPON)": { tx_max: 5, tx_min: 1, rx_sens: -28.5, sat_power: -10, code: "9801A25T" },
+      "ET916-H-A (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A25S" },
+      "ET924-H-POE (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A25U" },
+      "ET904-A (XEPON)": { tx_max: 5, tx_min: 1, rx_sens: -28.5, sat_power: -8, code: "9801A2FX" },
+      "ET904-H (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -8, code: "9801A2P3" },
+      "ET904-H-P (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A2QA" },
+      "ET908-H-P (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A2Q9" },
+      "ET908-H-POE-W (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A2UA" },
+      "ET908-H-PQ (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A3B2" },
+      "ET908-H-PD (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A3B9" },
+      "EGT904-H-TW (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -9, code: "9801A4EH" },
+      "ET908-H-8TW (XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A4BU" },
+      "EGT904-H-TWF (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -9, code: "9801A5JP" },
+      "EGT924-H-R (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -10, code: "9801A456" },
+      "EGT901C-H-7WF (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -9, code: "9801A8X2" },
+      "EGT904-H-T7WF (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -9, code: "9801A8X3" },
+      "EGT910-H-PD (工作在XEPON)": { tx_max: 9, tx_min: 4, rx_sens: -28.5, sat_power: -9, code: "9801A8X1" },
+    };
     
     const CN_SPLITTER_LOSS = {
-      '1x2': 3.6, '2x2': 3.6,
-      '1x4': 7.2, '2x4': 7.2,
-      '1x8': 10.3, '2x8': 10.3,
-      '1x16': 13.6, '2x16': 13.6,
-      '1x32': 16.0, '2x32': 16.0,
-      '1x64': 20.3, '2x64': 20.3,
+      "1x2": 3.8, "2x2": 4.2, "1x4": 7.1, "2x4": 7.4,
+      "1x8": 10.2, "2x8": 10.8, "1x16": 13.5, "2x16": 14.1,
+      "1x32": 16.6, "2x32": 17.2, "1x64": 20.1, "2x64": 20.4,
     };
     
-    const CN_FIBER_LOSS = 0.35; // dB/km
+    const CN_FIBER_LOSS = 0.04;  // dB/km
+    const CN_FUSION_LOSS_MIN = 0.04;
     
     function cn_init() {
-      cn_updateOLTList();
-      cn_updateONUList();
+      cn_onNetworkTypeChange();
     }
     
-    function cn_updateOLTList() {
-      const networkType = document.getElementById('cn_networkType').value;
-      const select = document.getElementById('cn_oltModule');
-      const modules = CN_OLT_MODULES[networkType];
+    function cn_onNetworkTypeChange() {
+      const netType = document.getElementById('cn_networkType').value;
       
-      select.innerHTML = modules.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+      // Update OLT modules
+      const oltModules = CN_OLT_MODULES[netType] || [];
+      const oltSelect = document.getElementById('cn_oltModule');
+      oltSelect.innerHTML = oltModules.map(m => `<option value="${m}">${m}</option>`).join('');
+      
+      // Update ONU modules
+      const onuModules = CN_ONU_MODULES[netType] || [];
+      const onuSelect = document.getElementById('cn_onuModule');
+      onuSelect.innerHTML = onuModules.map(m => `<option value="${m}">${m}</option>`).join('');
+      
       cn_updateOLTInfo();
-    }
-    
-    function cn_updateOLTInfo() {
-      const networkType = document.getElementById('cn_networkType').value;
-      const moduleName = document.getElementById('cn_oltModule').value;
-      const modules = CN_OLT_MODULES[networkType];
-      const module = modules.find(m => m.name === moduleName);
-      
-      if (module) {
-        document.getElementById('cn_oltInfo').innerHTML = `
-          <strong>型号:</strong> ${module.name}<br>
-          <strong>发送功率:</strong> ${module.tx} dBm<br>
-          <strong>接收灵敏度:</strong> ${module.rx} dBm<br>
-          <strong>功率预算:</strong> ${module.power}
-        `;
-      }
-      cn_calculate();
-    }
-    
-    function cn_updateSplitterLoss() {
-      cn_calculate();
-    }
-    
-    function cn_updateONUList() {
-      const select = document.getElementById('cn_onuModule');
-      select.innerHTML = CN_ONU_DEVICES.map(o => `<option value="${o.name}">${o.name}</option>`).join('');
       cn_updateONUInfo();
     }
     
-    function cn_updateONUInfo() {
-      const onuName = document.getElementById('cn_onuModule').value;
-      const onu = CN_ONU_DEVICES.find(o => o.name === onuName);
+    function cn_updateOLTInfo() {
+      const module = document.getElementById('cn_oltModule').value;
+      const info = CN_OLT_PARAMS[module];
+      const infoDiv = document.getElementById('cn_oltInfo');
       
-      if (onu) {
-        document.getElementById('cn_onuInfo').innerHTML = `
-          <strong>型号:</strong> ${onu.name}<br>
-          <strong>接收灵敏度:</strong> ${onu.rx} dBm<br>
-          <strong>过载功率:</strong> ${onu.sat} dBm
+      if (info) {
+        infoDiv.innerHTML = `
+          TX Power: ${info.tx_min}~${info.tx_max} dBm | Rx Sensitivity: ${info.rx_sens} dBm | Sat Power: ${info.sat_power} dBm
+          <div class="device-code">Code: ${info.code}</div>
         `;
+      } else {
+        infoDiv.innerHTML = '';
       }
+    }
+    
+    function cn_updateONUInfo() {
+      const module = document.getElementById('cn_onuModule').value;
+      const info = CN_ONU_PARAMS[module];
+      const infoDiv = document.getElementById('cn_onuInfo');
+      
+      if (info) {
+        infoDiv.innerHTML = `
+          TX Power: ${info.tx_min}~${info.tx_max} dBm | Rx Sensitivity: ${info.rx_sens} dBm | Sat Power: ${info.sat_power} dBm
+          <div class="device-code">Code: ${info.code}</div>
+        `;
+      } else {
+        infoDiv.innerHTML = '';
+      }
+    }
+    
+    function cn_updateSplitterInfo() {
+      const ratio = document.getElementById('cn_splitter').value;
+      const loss = CN_SPLITTER_LOSS[ratio];
+      document.getElementById('cn_splitterLoss').textContent = loss ? `Loss: ${loss} dB` : 'Loss: -- dB';
+      cn_calculate();
+    }
+    
+    function cn_updateFiberLoss() {
+      const fiberOlt = parseFloat(document.getElementById('cn_fiberOlt').value) || 0;
+      const fiberOnu = parseFloat(document.getElementById('cn_fiberOnu').value) || 0;
+      
+      document.getElementById('cn_fiberOltLoss').textContent = `Loss: ${(fiberOlt * CN_FIBER_LOSS).toFixed(3)} dB`;
+      document.getElementById('cn_fiberOnuLoss').textContent = `Loss: ${(fiberOnu * CN_FIBER_LOSS).toFixed(3)} dB`;
+      cn_calculate();
+    }
+    
+    function cn_updateFusionLoss() {
+      const stages = parseInt(document.getElementById('cn_fusionStages').value) || 0;
+      const loss = stages * CN_FUSION_LOSS_MIN;
+      document.getElementById('cn_fusionLoss').textContent = `(Loss: ${loss.toFixed(2)} dB)`;
+      cn_updateConnectorLoss();
+    }
+    
+    function cn_updateConnectorLoss() {
+      const connectorType = document.querySelector('input[name="cn_connector"]:checked').value;
+      const stages = parseInt(document.getElementById('cn_fusionStages').value) || 0;
+      const lossPerConnector = connectorType === 'UPC' ? 0.1 : 0.2;
+      const totalConnectors = (stages + 1) * 2 + 2;
+      const totalLoss = totalConnectors * lossPerConnector;
+      
+      document.getElementById('cn_connectorLoss').textContent = `(${totalConnectors} pcs, Loss: ${totalLoss.toFixed(2)} dB)`;
       cn_calculate();
     }
     
     function cn_calculate() {
-      // Get values
-      const networkType = document.getElementById('cn_networkType').value;
-      const moduleName = document.getElementById('cn_oltModule').value;
-      const modules = CN_OLT_MODULES[networkType];
-      const oltModule = modules.find(m => m.name === moduleName);
+      const oltModule = document.getElementById('cn_oltModule').value;
+      const onuModule = document.getElementById('cn_onuModule').value;
+      const splitterRatio = document.getElementById('cn_splitter').value;
       
-      const onuName = document.getElementById('cn_onuModule').value;
-      const onu = CN_ONU_DEVICES.find(o => o.name === onuName);
+      if (!oltModule || !onuModule || !splitterRatio) {
+        return;
+      }
       
-      const splitterRatio = document.getElementById('cn_splitterRatio').value;
+      const olt = CN_OLT_PARAMS[oltModule];
+      const onu = CN_ONU_PARAMS[onuModule];
       const splitterLoss = CN_SPLITTER_LOSS[splitterRatio];
       
       const fiberOlt = parseFloat(document.getElementById('cn_fiberOlt').value) || 0;
       const fiberOnu = parseFloat(document.getElementById('cn_fiberOnu').value) || 0;
-      const connectors = parseInt(document.getElementById('cn_connectors').value) || 0;
       const attenuator = parseFloat(document.getElementById('cn_attenuator').value) || 0;
+      const fusionStages = parseInt(document.getElementById('cn_fusionStages').value) || 0;
+      const connectorType = document.querySelector('input[name="cn_connector"]:checked').value;
       
-      // Update fiber loss display
+      // Calculate losses
       const fiberOltLoss = fiberOlt * CN_FIBER_LOSS;
       const fiberOnuLoss = fiberOnu * CN_FIBER_LOSS;
-      document.getElementById('cn_fiberOltLoss').textContent = `损耗: ${fiberOltLoss.toFixed(2)} dB`;
-      document.getElementById('cn_fiberOnuLoss').textContent = `损耗: ${fiberOnuLoss.toFixed(2)} dB`;
-      document.getElementById('cn_connectorLoss').textContent = `损耗: ${(connectors * 0.3).toFixed(1)} dB`;
-      
-      // Calculate total loss
-      const totalLoss = splitterLoss + fiberOltLoss + fiberOnuLoss + (connectors * 0.3) + attenuator;
+      const fusionLoss = fusionStages * CN_FUSION_LOSS_MIN;
+      const connectorLossPer = connectorType === 'UPC' ? 0.1 : 0.2;
+      const connectorLoss = ((fusionStages + 1) * 2 + 2) * connectorLossPer;
+      const totalLoss = fiberOltLoss + splitterLoss + attenuator + fusionLoss + fiberOnuLoss + connectorLoss;
       
       // Calculate received power
-      const receivedPower = oltModule.tx - totalLoss;
+      const oltTxMax = olt.tx_max;
+      const oltTxMin = olt.tx_min;
+      const onuTxMax = onu.tx_max;
+      const onuTxMin = onu.tx_min;
       
-      // Determine status
-      const minAcceptable = onu.rx + 2; // 2dB margin
-      const maxAcceptable = onu.sat - 3; // 3dB margin
+      // OLT received (upstream)
+      const oltRxMax = onuTxMax - totalLoss;
+      const oltRxMin = onuTxMin - totalLoss;
+      const oltRxAvg = (oltRxMin + oltRxMax) / 2;
       
-      let status, statusClass;
-      if (receivedPower >= minAcceptable && receivedPower <= maxAcceptable) {
-        status = '合格 PASS';
-        statusClass = 'pass';
-      } else if (receivedPower < onu.rx) {
-        status = '不合格 - 光功率过低';
-        statusClass = 'fail';
-      } else if (receivedPower > onu.sat) {
-        status = '不合格 - 光功率过高';
-        statusClass = 'fail';
+      // ONU received (downstream)
+      const onuRxMax = oltTxMax - totalLoss;
+      const onuRxMin = oltTxMin - totalLoss;
+      const onuRxAvg = (onuRxMin + onuRxMax) / 2;
+      
+      // Update loss display
+      document.getElementById('cn_lossFiberOlt').textContent = `${fiberOltLoss.toFixed(3)} dB`;
+      document.getElementById('cn_lossSplitter').textContent = `${splitterLoss.toFixed(1)} dB`;
+      document.getElementById('cn_lossFiberOnu').textContent = `${fiberOnuLoss.toFixed(3)} dB`;
+      document.getElementById('cn_lossAttenuator').textContent = `${attenuator.toFixed(1)} dB`;
+      document.getElementById('cn_lossFusion').textContent = `${fusionLoss.toFixed(2)} dB`;
+      document.getElementById('cn_lossConnector').textContent = `${connectorLoss.toFixed(2)} dB (${connectorType})`;
+      document.getElementById('cn_totalLoss').textContent = `${totalLoss.toFixed(2)} dB`;
+      
+      document.getElementById('cn_oltRxAvg').textContent = `${oltRxAvg.toFixed(2)} dBm`;
+      document.getElementById('cn_oltRxRange').textContent = `(${oltRxMin.toFixed(2)} ~ ${oltRxMax.toFixed(2)})`;
+      document.getElementById('cn_onuRxAvg').textContent = `${onuRxAvg.toFixed(2)} dBm`;
+      document.getElementById('cn_onuRxRange').textContent = `(${onuRxMin.toFixed(2)} ~ ${onuRxMax.toFixed(2)})`;
+      document.getElementById('cn_totalLossDisplay').textContent = `${totalLoss.toFixed(2)} dB`;
+      
+      // Generate judgment
+      cn_generateJudgment(olt, onu, oltRxAvg, onuRxAvg, oltRxMin, oltRxMax, onuRxMin, onuRxMax);
+      
+      document.getElementById('cn_results').style.display = 'block';
+    }
+    
+    function cn_generateJudgment(olt, onu, oltRxAvg, onuRxAvg, oltRxMin, oltRxMax, onuRxMin, onuRxMax) {
+      const CRITICAL_THRESHOLD = 1.0;
+      let uplinkStatus = 'normal';
+      let downlinkStatus = 'normal';
+      const uplinkLines = [];
+      const downlinkLines = [];
+      
+      // Upstream analysis
+      if (oltRxAvg > olt.sat_power) {
+        uplinkStatus = 'fail';
+        uplinkLines.push({ text: `[上行] OLT侧接收功率 ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
+        uplinkLines.push({ text: `  - 接收值 > 饱和功率 (${olt.sat_power} dBm)`, class: '' });
+        uplinkLines.push({ text: `  - 结论: 光功率不合格`, class: 'fail' });
+      } else if (oltRxAvg < olt.rx_sens) {
+        uplinkStatus = 'fail';
+        uplinkLines.push({ text: `[上行] OLT侧接收功率 ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
+        uplinkLines.push({ text: `  - 接收值 < 灵敏度 (${olt.rx_sens} dBm)`, class: '' });
+        uplinkLines.push({ text: `  - 结论: 光功率不合格`, class: 'fail' });
+      } else if (oltRxAvg - olt.rx_sens < CRITICAL_THRESHOLD) {
+        uplinkStatus = 'warn';
+        uplinkLines.push({ text: `[上行] OLT侧接收功率 ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
+        uplinkLines.push({ text: `  - 警告: 余量不足 (余量: ${(oltRxAvg - olt.rx_sens).toFixed(2)} dB < ${CRITICAL_THRESHOLD} dB)`, class: 'warn' });
+        uplinkLines.push({ text: `  - 建议: 增加光功率预算`, class: 'warn' });
       } else {
-        status = '警告 - 建议增加余量';
-        statusClass = 'warn';
+        uplinkStatus = 'pass';
+        uplinkLines.push({ text: `[上行] OLT侧接收功率 ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
+        uplinkLines.push({ text: `  - 接收值在正常范围内`, class: 'pass' });
+        uplinkLines.push({ text: `  - 结论: 光功率合格 (余量: ${(oltRxAvg - olt.rx_sens).toFixed(2)} dB)`, class: 'pass' });
       }
       
-      // Display results
-      document.getElementById('cn_results').style.display = 'block';
-      document.getElementById('cn_resultSummary').innerHTML = `
-        <div class="cn-result-item">
-          <h4>总损耗</h4>
-          <div class="value">${totalLoss.toFixed(2)} dB</div>
-        </div>
-        <div class="cn-result-item">
-          <h4>ONU接收功率</h4>
-          <div class="value ${statusClass}">${receivedPower.toFixed(2)} dBm</div>
-        </div>
-        <div class="cn-result-item">
-          <h4>合格范围</h4>
-          <div class="value">${minAcceptable.toFixed(1)} ~ ${maxAcceptable.toFixed(1)} dBm</div>
-        </div>
-      `;
+      // Downstream analysis
+      if (onuRxAvg > onu.sat_power) {
+        downlinkStatus = 'fail';
+        downlinkLines.push({ text: `[下行] ONU侧接收功率 ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
+        downlinkLines.push({ text: `  - 接收值 > 饱和功率 (${onu.sat_power} dBm)`, class: '' });
+        downlinkLines.push({ text: `  - 结论: 光功率不合格`, class: 'fail' });
+      } else if (onuRxAvg < onu.rx_sens) {
+        downlinkStatus = 'fail';
+        downlinkLines.push({ text: `[下行] ONU侧接收功率 ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
+        downlinkLines.push({ text: `  - 接收值 < 灵敏度 (${onu.rx_sens} dBm)`, class: '' });
+        downlinkLines.push({ text: `  - 结论: 光功率不合格`, class: 'fail' });
+      } else if (onuRxAvg - onu.rx_sens < CRITICAL_THRESHOLD) {
+        downlinkStatus = 'warn';
+        downlinkLines.push({ text: `[下行] ONU侧接收功率 ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
+        downlinkLines.push({ text: `  - 警告: 余量不足 (余量: ${(onuRxAvg - onu.rx_sens).toFixed(2)} dB < ${CRITICAL_THRESHOLD} dB)`, class: 'warn' });
+        downlinkLines.push({ text: `  - 建议: 增加光功率预算`, class: 'warn' });
+      } else {
+        downlinkStatus = 'pass';
+        downlinkLines.push({ text: `[下行] ONU侧接收功率 ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
+        downlinkLines.push({ text: `  - 接收值在正常范围内`, class: 'pass' });
+        downlinkLines.push({ text: `  - 结论: 光功率合格 (余量: ${(onuRxAvg - onu.rx_sens).toFixed(2)} dB)`, class: 'pass' });
+      }
       
-      const badge = document.getElementById('cn_statusBadge');
-      badge.className = `cn-status-badge ${statusClass === 'pass' ? 'pass' : statusClass === 'warn' ? 'pending' : 'fail'}`;
-      badge.textContent = status;
+      // Overall status
+      const overallStatus = (uplinkStatus === 'fail' || downlinkStatus === 'fail') ? 'fail' : 
+                           (uplinkStatus === 'warn' || downlinkStatus === 'warn') ? 'warn' : 'pass';
+      
+      // Generate HTML
+      let html = `<h4>功率判定 Power Judgment</h4>`;
+      uplinkLines.forEach(line => {
+        html += `<div class="judgment-line ${line.class}">${line.text}</div>`;
+      });
+      html += `<div style="height: 10px;"></div>`;
+      downlinkLines.forEach(line => {
+        html += `<div class="judgment-line ${line.class}">${line.text}</div>`;
+      });
+      
+      html += `<div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #e5e7eb;">`;
+      if (overallStatus === 'pass') {
+        html += `<div style="color: #065f46; font-weight: 600; font-size: 16px;">✓ 总体结论: 所有链路光功率合格</div>`;
+      } else if (overallStatus === 'warn') {
+        html += `<div style="color: #92400e; font-weight: 600; font-size: 16px;">⚠ 总体结论: 链路余量不足，建议优化</div>`;
+      } else {
+        html += `<div style="color: #991b1b; font-weight: 600; font-size: 16px;">✗ 总体结论: 存在不合格链路，请调整配置</div>`;
+      }
+      html += `</div>`;
+      
+      document.getElementById('cn_judgmentResult').innerHTML = html;
     }
     
     function cn_reset() {
       document.getElementById('cn_networkType').selectedIndex = 0;
       document.getElementById('cn_fiberOlt').value = 0;
       document.getElementById('cn_fiberOnu').value = 0;
-      document.getElementById('cn_connectors').value = 2;
       document.getElementById('cn_attenuator').value = 0;
-      document.getElementById('cn_splitterRatio').selectedIndex = 0;
-      cn_updateOLTList();
-      cn_updateONUList();
+      document.getElementById('cn_fusionStages').value = 0;
+      document.getElementById('cn_splitter').selectedIndex = 0;
+      document.querySelector('input[name="cn_connector"][value="UPC"]').checked = true;
+      cn_onNetworkTypeChange();
+      cn_updateFiberLoss();
+      cn_updateFusionLoss();
+      cn_updateConnectorLoss();
       document.getElementById('cn_results').style.display = 'none';
     }
     
@@ -1364,23 +1124,27 @@
         <p>本工具用于计算园区网络PON光功率预算，判断链路配置是否满足光功率要求。</p>
         
         <h4>【计算公式】</h4>
-        <pre>总损耗 = 分光损耗 + OLT→分光器光纤损耗 + 分光器→ONU光纤损耗 + 连接器损耗 + 衰减器
+        <pre>总损耗 = OLT→分光器光纤损耗 + 分光器损耗 + 分光器→ONU光纤损耗 
+      + 衰减器 + 熔接损耗 + 连接器损耗
 
-ONU接收功率 = OLT发送功率 - 总损耗</pre>
+OLT侧接收功率 = ONU发送功率 - 总损耗
+ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
         
         <h4>【参数说明】</h4>
         <ul>
-          <li><strong>分光损耗</strong>: 根据分光比确定（1:2=3.6dB, 1:4=7.2dB, 等）</li>
-          <li><strong>光纤损耗</strong>: 标准0.35dB/km</li>
-          <li><strong>连接器损耗</strong>: 每个活动连接器约0.3dB</li>
+          <li><strong>光纤损耗</strong>: 标准0.04dB/km</li>
+          <li><strong>分光损耗</strong>: 1x2=3.8dB, 1x4=7.1dB, 1x8=10.2dB, 1x16=13.5dB, 1x32=16.6dB, 1x64=20.1dB</li>
+          <li><strong>熔接损耗</strong>: 每个熔接点约0.04dB</li>
+          <li><strong>连接器损耗</strong>: UPC型0.1dB/个, APC型0.2dB/个</li>
         </ul>
         
         <h4>【合格标准】</h4>
-        <pre>接收灵敏度 + 2dB &lt; 接收光功率 &lt; 过载功率 - 3dB</pre>
+        <pre>接收灵敏度 + 1dB &lt; 接收光功率 &lt; 饱和功率</pre>
+        <p>余量小于1dB时会显示警告，建议增加光功率预算。</p>
       `;
       document.getElementById('helpModal').classList.add('active');
     }
-    
+
     // ============================================
     // Small PON Calculator - Data
     // ============================================
@@ -1675,7 +1439,7 @@ ONU接收功率 = OLT发送功率 - 总损耗</pre>
       `;
       document.getElementById('helpModal').classList.add('active');
     }
-    
+
     // ============================================
     // Common Functions
     // ============================================
