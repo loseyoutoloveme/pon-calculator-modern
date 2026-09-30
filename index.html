@@ -338,9 +338,32 @@
     
     .footer { text-align: center; margin-top: 20px; padding: 20px; color: rgba(255,255,255,0.7); font-size: 13px; }
     .page-footer { text-align: center; margin-top: 20px; padding: 20px; color: #94a3b8; font-size: 13px; }
+    
+    /* Language Switcher */
+    .lang-switcher {
+      position: fixed; top: 20px; right: 20px; z-index: 9999;
+      display: flex; gap: 5px;
+    }
+    .lang-btn {
+      padding: 8px 16px; border: 2px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.1); color: #fff;
+      border-radius: 20px; cursor: pointer; font-size: 13px;
+      font-weight: 600; transition: all 0.3s;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.2); }
+    .lang-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-color: transparent;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Language Switcher -->
+  <div class="lang-switcher">
+    <button class="lang-btn" id="langEn" onclick="setLanguage('en')">EN</button>
+    <button class="lang-btn" id="langZh" onclick="setLanguage('zh')">中文</button>
+  </div>
 
   <!-- ========== Home Page ========== -->
   <div class="home-page" id="homePage">
@@ -354,10 +377,10 @@
         <h2>园区光计算器</h2>
         <p>适用于园区网络场景，支持XGSPON/XGPON/GPON/EPON/XEPON多种网络类型，可配置OLT光模块、ONU设备、分光比、光纤长度、熔接点等详细参数。</p>
         <div class="module-tags">
-          <span class="module-tag">OLT模块</span>
-          <span class="module-tag">ONU设备</span>
-          <span class="module-tag">多级分光</span>
-          <span class="module-tag">光纤损耗</span>
+          <span class="module-tag" data-i18n="oltModule">OLT Module</span>
+          <span class="module-tag" data-i18n="onuDevice">ONU Device</span>
+          <span class="module-tag" data-i18n="multiSplit">Multi-stage Split</span>
+          <span class="module-tag" data-i18n="fiberLoss">Fiber Loss</span>
         </div>
         <span class="enter-btn">进入计算器 →</span>
       </div>
@@ -366,10 +389,10 @@
         <h2>小全光计算器</h2>
         <p>适用于小全光网络场景，支持光网关与光AP/光交换组合，可配置1x2~1x64无源分光器和1x5/1x9有源分光器，支持多级级联。</p>
         <div class="module-tags">
-          <span class="module-tag">光网关</span>
-          <span class="module-tag">光AP/光交换</span>
-          <span class="module-tag">无源分光器</span>
-          <span class="module-tag">有源分光器</span>
+          <span class="module-tag" data-i18n="opticalGateway">Optical Gateway</span>
+          <span class="module-tag" data-i18n="opticalAp">Optical AP/Switch</span>
+          <span class="module-tag" data-i18n="passiveSplitter">Passive Splitter</span>
+          <span class="module-tag" data-i18n="activeSplitter">Active Splitter</span>
         </div>
         <span class="enter-btn">进入计算器 →</span>
       </div>
@@ -778,7 +801,7 @@
   <div class="modal-overlay" id="helpModal">
     <div class="modal">
       <div class="modal-header">
-        <h2>帮助说明</h2>
+        <h2 id="helpModalTitle">Help</h2>
         <button class="modal-close" onclick="closeHelp()">×</button>
       </div>
       <div class="modal-body">
@@ -788,6 +811,427 @@
   </div>
 
   <script>
+    // ============================================
+    // Internationalization / i18n
+    // ============================================
+    
+    const I18N = {
+      en: {
+        // Home Page
+        homeTitle: 'PON Optical Power Calculator',
+        homeSubtitle: 'H3C PON Network Optical Power Budget Solution',
+        campusTitle: 'Campus Network Calculator',
+        campusDesc: 'Suitable for campus network scenarios, supporting XGSPON/XGPON/GPON/EPON/XEPON network types, with configurable OLT modules, ONU devices, split ratios, fiber lengths, fusion splices and other detailed parameters.',
+        smallTitle: 'Small Campus FTTR Calculator',
+        smallDesc: 'Suitable for small campus FTTR scenarios, supporting optical gateway and optical AP/switch combinations, configurable 1x2~1x64 passive splitters and 1x5/1x9 active splitters with multi-level cascading.',
+        enterBtn: 'Enter Calculator →',
+        footer: '© 2026 H3C PON Optical Power Calculator | Campus FTTR & Small Campus FTTR',
+        
+        // Campus Page
+        campusPageTitle: 'Campus Network Optical Power Calculator',
+        oltManager: 'OLT Module Manager',
+        onuManager: 'ONU Device Manager',
+        step1: 'Select Network Type',
+        step2: 'OLT Optical Module Selection',
+        step3: 'ONU Device Selection',
+        step4: 'Splitter Configuration',
+        step5: 'Fiber Length',
+        step6: 'Fusion Splicing & Patch Cords',
+        selectModule: 'Select Module',
+        selectOnu: 'Select ONU Device',
+        selectSplitter: 'Split Ratio',
+        attenuator: 'Attenuator',
+        fiberOlt: 'OLT → Splitter',
+        fiberOnu: 'Splitter → ONU',
+        fusionStages: 'Patch Stages',
+        connectorType: 'Connector Type',
+        calculate: 'Calculate',
+        reset: 'Reset',
+        help: 'Help',
+        pleaseSelect: 'Please select OLT module',
+        pleaseSelectOnu: 'Please select ONU device',
+        loss: 'Loss',
+        dB: 'dB',
+        pcs: 'pcs',
+        
+        // Results
+        lossBreakdown: 'Loss Breakdown',
+        fiberLossOlt: 'Fiber Loss (OLT→Splitter)',
+        splitterLoss: 'Splitter Loss',
+        fiberLossOnu: 'Fiber Loss (Splitter→ONU)',
+        attenuatorLoss: 'Attenuator',
+        fusionLoss: 'Fusion Splice Loss',
+        connectorLoss: 'Connector Loss',
+        totalLoss: 'Total Loss',
+        oltRxPower: 'OLT-side Rx Power',
+        onuRxPower: 'ONU-side Rx Power',
+        powerBudget: 'Power Budget',
+        powerJudgment: 'Power Judgment',
+        uplink: 'Uplink',
+        downlink: 'Downlink',
+        rxPower: 'Rx Power',
+        satPower: 'Saturation Power',
+        sensitivity: 'Sensitivity',
+        conclusion: 'Conclusion',
+        pass: 'Pass',
+        warn: 'Margin Insufficient',
+        fail: 'Fail',
+        margin: 'Margin',
+        normal: 'Within Normal Range',
+        increaseBudget: 'Recommend increasing power budget',
+        adjustConfig: 'Please adjust configuration',
+        allPass: 'All links optical power qualified',
+        overallWarn: 'Link margin insufficient, recommend optimization',
+        overallFail: 'Unqualified links detected, please adjust configuration',
+        
+        // Small PON Page
+        smallPageTitle: 'Small Campus FTTR Optical Power Calculator',
+        gatewayModel: 'Optical Gateway Model',
+        apModel: 'Optical AP/Switch Model',
+        txPower: 'TX Power',
+        rxRange: 'Rx Range',
+        rxSensitivity: 'Rx Sensitivity',
+        overloadPower: 'Overload Power',
+        acceptableRange: 'Acceptable Range',
+        marginReserved: '2dB margin reserved',
+        odnConfig: 'ODN Network Configuration',
+        level: 'Level',
+        splitterModel: 'Splitter Model',
+        directLoss: 'Direct Loss',
+        cascadeLoss: 'Cascade Loss',
+        uplinkPower: 'Uplink Power',
+        apRxPower: 'AP Rx Power',
+        status: 'Status',
+        action: 'Action',
+        addLevel: 'Add Splitter Level',
+        removeLevel: 'Remove',
+        calculateSmall: 'Calculate',
+        resetSmall: 'Reset',
+        helpSmall: 'Help',
+        calcResults: 'Calculation Results',
+        selectSplitterHint: 'Please select at least one splitter',
+        allPassSmall: 'All splitter levels optical power qualified!',
+        someFailSmall: 'Some splitter levels optical power not qualified',
+        qualified: 'Qualified',
+        unqualified: 'Unqualified',
+        
+        // OLT/ONU Manager
+        oltManagerTitle: 'OLT Optical Module Manager',
+        onuManagerTitle: 'ONU Device Manager',
+        allModules: 'All Modules List',
+        addEditDevice: 'Add/Edit Device',
+        systemModules: 'System Modules (gray)',
+        userModules: 'User-defined Modules (white, click to edit)',
+        systemDevices: 'System Devices (gray)',
+        userDevices: 'User-defined Devices (white, click to edit)',
+        noUserModules: 'No user-defined modules',
+        networkType: 'Network Type',
+        deviceName: 'Device Name',
+        materialCode: 'Material Code',
+        txMax: 'TX Max',
+        txMin: 'TX Min',
+        rxSens: 'Rx Sensitivity',
+        satPowerLabel: 'Saturation Power',
+        note: 'Note: New devices will be categorized into the dropdown by network type',
+        addDevice: 'Add Device',
+        close: 'Close',
+        fillAllFields: 'Please fill in all required fields',
+        systemModule: 'System module',
+        cannotModify: 'cannot be modified',
+        deviceAdded: 'Device added successfully!',
+        
+        // Help
+        helpTitle: 'Help',
+        featureDesc: 'This tool calculates PON optical power budget for campus networks and determines if link configuration meets optical power requirements.',
+        calcFormula: 'Calculation Formula',
+        paramDesc: 'Parameter Description',
+        fiberLossStd: 'Fiber Loss: Standard 0.04 dB/km',
+        splitterLossStd: 'Splitter Loss: 1x2=3.8dB, 1x4=7.1dB, 1x8=10.2dB, 1x16=13.5dB, 1x32=16.6dB, 1x64=20.1dB',
+        fusionLossStd: 'Fusion Loss: Approximately 0.04 dB per splice point',
+        connectorLossStd: 'Connector Loss: UPC type 0.1 dB/pc, APC type 0.2 dB/pc',
+        passCriteria: 'Pass Criteria',
+        marginWarning: 'Warning will show when margin is less than 1 dB, recommend increasing power budget.',
+        
+        // Small PON Help
+        smallFeatureDesc: 'This tool calculates optical power budget for small campus FTTR networks and determines if network configuration meets optical power requirements.',
+        calcModel: 'Calculation Model',
+        level1: 'Level 1 Split:',
+        level2: 'Level 2+ Split:',
+        splitterNote: 'Splitter Notes',
+        passiveSplitter: 'Passive Splitter (OSPL series): Cascade loss=0, supports 1x2~1x64',
+        activeSplitter: 'Active Splitter (UFD series): Cascade loss>0, supports multi-level cascading',
+        smallPassCriteria: 'Rx Sensitivity + 2dB < Rx Power < Overload Power - 2dB',
+        
+        // Common
+        loading: 'Loading...',
+        error: 'Error',
+        confirm: 'Confirm',
+        cancel: 'Cancel',
+      },
+      zh: {
+        // Home Page
+        homeTitle: 'PON光功率计算器',
+        homeSubtitle: '新华三PON网络光功率预算解决方案',
+        campusTitle: '园区光计算器',
+        campusDesc: '适用于园区网络场景，支持XGSPON/XGPON/GPON/EPON/XEPON多种网络类型，可配置OLT光模块、ONU设备、分光比、光纤长度、熔接点等详细参数。',
+        smallTitle: '小全光计算器',
+        smallDesc: '适用于小全光网络场景，支持光网关与光AP/光交换组合，可配置1x2~1x64无源分光器和1x5/1x9有源分光器，支持多级级联。',
+        enterBtn: '进入计算器 →',
+        footer: '© 2026 新华三PON光功率计算器综合版 | 支持园区光 & 小全光场景',
+        
+        // Campus Page
+        campusPageTitle: '园区光网络光功率计算器',
+        oltManager: 'OLT模块管理',
+        onuManager: 'ONU设备管理',
+        step1: '选择网络制式',
+        step2: 'OLT光模块选择',
+        step3: 'ONU设备选择',
+        step4: '分光器设置',
+        step5: '光纤长度',
+        step6: '熔接与跳纤',
+        selectModule: 'Select Module',
+        selectOnu: 'Select ONU Device',
+        selectSplitter: 'Split Ratio',
+        attenuator: 'Attenuator (dB)',
+        fiberOlt: 'OLT → Splitter (km)',
+        fiberOnu: 'Splitter → ONU (km)',
+        fusionStages: 'Patch Stages',
+        connectorType: 'Connector Type',
+        calculate: '开始计算',
+        reset: '重置',
+        help: '帮助说明',
+        pleaseSelect: '请选择OLT模块',
+        pleaseSelectOnu: '请选择ONU设备',
+        loss: 'Loss',
+        dB: 'dB',
+        pcs: 'pcs',
+        
+        // Results
+        lossBreakdown: '损耗明细 Loss Breakdown',
+        fiberLossOlt: '光纤损耗 (OLT→Splitter)',
+        splitterLoss: '分光器损耗',
+        fiberLossOnu: '光纤损耗 (Splitter→ONU)',
+        attenuatorLoss: '衰减器',
+        fusionLoss: '熔接损耗',
+        connectorLoss: '连接器损耗',
+        totalLoss: '总损耗 Total Loss',
+        oltRxPower: 'OLT侧接收功率',
+        onuRxPower: 'ONU侧接收功率',
+        powerBudget: '功率预算',
+        powerJudgment: '功率判定 Power Judgment',
+        uplink: '上行',
+        downlink: '下行',
+        rxPower: '接收功率',
+        satPower: '饱和功率',
+        sensitivity: '灵敏度',
+        conclusion: '结论',
+        pass: '合格',
+        warn: '余量不足',
+        fail: '不合格',
+        margin: '余量',
+        normal: '在正常范围内',
+        increaseBudget: '增加光功率预算',
+        adjustConfig: '调整配置',
+        allPass: '所有链路光功率合格',
+        overallWarn: '链路余量不足，建议优化',
+        overallFail: '存在不合格链路，请调整配置',
+        
+        // Small PON Page
+        smallPageTitle: '小全光网络光功率计算器',
+        gatewayModel: '光网关型号',
+        apModel: '光AP/光交换型号',
+        txPower: '发送功率',
+        rxRange: '接收范围',
+        rxSensitivity: '接收灵敏度',
+        overloadPower: '过载功率',
+        acceptableRange: '合格范围',
+        marginReserved: '预留2dB余量',
+        odnConfig: 'ODN网络配置',
+        level: '级别',
+        splitterModel: '分光器型号',
+        directLoss: '直连损耗',
+        cascadeLoss: '级联损耗',
+        uplinkPower: '上行光功率',
+        apRxPower: '光AP接收功率',
+        status: '状态',
+        action: '操作',
+        addLevel: '添加分光级别',
+        removeLevel: '-',
+        calculateSmall: '开始计算',
+        resetSmall: '重置',
+        helpSmall: '帮助说明',
+        calcResults: '计算结果',
+        selectSplitterHint: '请选择分光器并点击计算',
+        allPassSmall: '所有分光级别光功率均达标！',
+        someFailSmall: '部分分光级别光功率不达标',
+        qualified: '合格',
+        unqualified: '不合格',
+        
+        // OLT/ONU Manager
+        oltManagerTitle: 'OLT光模块管理器',
+        onuManagerTitle: 'ONU设备管理器',
+        allModules: '全部模块列表',
+        addEditDevice: '添加/编辑设备',
+        systemModules: '系统模块（灰色）',
+        userModules: '用户自定义模块（白色，可点击编辑）',
+        systemDevices: '系统设备（灰色）',
+        userDevices: '用户自定义设备（白色，可点击编辑）',
+        noUserModules: '暂无用户自定义模块',
+        networkType: '网络制式',
+        deviceName: '设备名称',
+        materialCode: '物料编码',
+        txMax: 'TX Max (dBm)',
+        txMin: 'TX Min (dBm)',
+        rxSens: 'Rx灵敏度 (dBm)',
+        satPowerLabel: '饱和功率 (dBm)',
+        note: '提示: 新设备将按网络制式分类到下拉列表中',
+        addDevice: '添加设备',
+        close: '关闭',
+        fillAllFields: '请填写所有必填字段',
+        systemModule: '系统模块',
+        cannotModify: '无法修改',
+        deviceAdded: '设备添加成功！',
+        
+        // Help
+        helpTitle: 'Help',
+        featureDesc: '本工具用于计算园区网络PON光功率预算，判断链路配置是否满足光功率要求。',
+        calcFormula: '计算公式',
+        paramDesc: '参数说明',
+        fiberLossStd: '光纤损耗: 标准0.04dB/km',
+        splitterLossStd: '分光损耗: 1x2=3.8dB, 1x4=7.1dB, 1x8=10.2dB, 1x16=13.5dB, 1x32=16.6dB, 1x64=20.1dB',
+        fusionLossStd: '熔接损耗: 每个熔接点约0.04dB',
+        connectorLossStd: '连接器损耗: UPC型0.1dB/个, APC型0.2dB/个',
+        passCriteria: '合格标准',
+        marginWarning: '余量小于1dB时会显示警告，建议增加光功率预算。',
+        
+        // Small PON Help
+        smallFeatureDesc: '本工具用于计算小全光网络的光功率预算，判断组网配置是否满足光功率要求。',
+        calcModel: '计算模型',
+        level1: '一级分光:',
+        level2: '二级及后续分光:',
+        splitterNote: '分光器说明',
+        passiveSplitter: '无源分光器 (OSPL系列): 级联损耗=0，支持1x2~1x64',
+        activeSplitter: '有源分光器 (UFD系列): 级联损耗>0，可多级级联',
+        smallPassCriteria: '接收灵敏度 + 2dB < 接收光功率 < 过载功率 - 2dB',
+        
+        // Common
+        loading: '加载中...',
+        error: '错误',
+        confirm: '确认',
+        cancel: '取消',
+      }
+    };
+    
+    let currentLang = 'en'; // Default to English
+    
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('ponCalcLang', lang);
+      
+      // Update language buttons
+      document.getElementById('langEn').classList.toggle('active', lang === 'en');
+      document.getElementById('langZh').classList.toggle('active', lang === 'zh');
+      
+      // Update all translatable elements
+      updatePageTexts();
+    }
+    
+    function t(key) {
+      return I18N[currentLang][key] || key;
+    }
+    
+    function updatePageTexts() {
+      // Home Page
+      document.querySelector('.home-header h1').textContent = t('homeTitle');
+      document.querySelector('.home-header p').textContent = t('homeSubtitle');
+      const cards = document.querySelectorAll('.module-card');
+      cards[0].querySelector('h2').textContent = t('campusTitle');
+      cards[0].querySelector('p').textContent = t('campusDesc');
+      cards[0].querySelector('.enter-btn').textContent = t('enterBtn');
+      cards[1].querySelector('h2').textContent = t('smallTitle');
+      cards[1].querySelector('p').textContent = t('smallDesc');
+      cards[1].querySelector('.enter-btn').textContent = t('enterBtn');
+      document.querySelector('.footer').textContent = t('footer');
+      
+      // Update module tags
+      const tags0 = cards[0].querySelectorAll('.module-tag');
+      tags0[0].textContent = 'OLT Module';
+      tags0[1].textContent = 'ONU Device';
+      tags0[2].textContent = 'Multi-stage Split';
+      tags0[3].textContent = 'Fiber Loss';
+      
+      const tags1 = cards[1].querySelectorAll('.module-tag');
+      tags1[0].textContent = 'Optical Gateway';
+      tags1[1].textContent = 'Optical AP/Switch';
+      tags1[2].textContent = 'Passive Splitter';
+      tags1[3].textContent = 'Active Splitter';
+      
+      // Campus Page
+      document.querySelector('#campusPage .card-title').firstChild.textContent = currentLang === 'en' ? '🏢 ' : '🏢 ';
+      document.querySelector('#campusPage .header-buttons .btn-primary').textContent = t('oltManager');
+      document.querySelector('#campusPage .header-buttons .btn-success').textContent = t('onuManager');
+      
+      // Update step titles
+      const cnSections = document.querySelectorAll('#campusPage .section-title');
+      cnSections[0].innerHTML = `<span class="num">1</span>${t('step1')}`;
+      cnSections[1].innerHTML = `<span class="num">2</span>${t('step2')}`;
+      cnSections[2].innerHTML = `<span class="num">3</span>${t('step3')}`;
+      cnSections[3].innerHTML = `<span class="num">4</span>${t('step4')}`;
+      cnSections[4].innerHTML = `<span class="num">5</span>${t('step5')}`;
+      cnSections[5].innerHTML = `<span class="num">6</span>${t('step6')}`;
+      
+      // Update form labels
+      const cnLabels = document.querySelectorAll('#campusPage .form-group label');
+      cnLabels.forEach(label => {
+        if (label.textContent.includes('Network Type')) label.textContent = t('step1') + ':';
+        if (label.textContent.includes('Select Module')) label.textContent = t('selectModule') + ':';
+        if (label.textContent.includes('Select ONU')) label.textContent = t('selectOnu') + ':';
+      });
+      
+      // Update small PON labels
+      const smallCards = document.querySelectorAll('#smallPage .device-card h3');
+      smallCards[0].textContent = t('gatewayModel');
+      smallCards[1].textContent = t('apModel');
+      
+      // Update table headers
+      const smallTableHeaders = document.querySelectorAll('#smallPage .splitter-table th');
+      smallTableHeaders[0].textContent = t('level');
+      smallTableHeaders[1].textContent = t('splitterModel');
+      smallTableHeaders[2].textContent = t('directLoss');
+      smallTableHeaders[3].textContent = t('cascadeLoss');
+      smallTableHeaders[4].textContent = t('uplinkPower');
+      smallTableHeaders[5].textContent = t('apRxPower');
+      smallTableHeaders[6].textContent = t('status');
+      smallTableHeaders[7].textContent = t('action');
+      
+      // Update button text
+      document.querySelector('#smallPage .add-btn span').textContent = '+';
+      document.querySelector('#smallPage .add-btn').innerHTML = `<span>+</span> ${t('addLevel')}`;
+      
+      const smallBtns = document.querySelectorAll('#smallPage .btn-group .btn-calc, #smallPage .btn-group .btn-secondary, #smallPage .btn-group .btn-help');
+      smallBtns[0].textContent = t('calculateSmall');
+      smallBtns[1].textContent = t('resetSmall');
+      smallBtns[2].textContent = t('helpSmall');
+      
+      // Update small PON card title
+      document.querySelector('#smallPage .card:first-child .card-title').textContent = currentLang === 'en' ? '🏠 Small Campus FTTR Optical Power Calculator' : '🏠 小全光网络光功率计算器';
+      document.querySelector('#smallPage .card:nth-child(2) .card-title').textContent = currentLang === 'en' ? 'ODN Network Configuration' : 'ODN网络配置';
+      
+      // Update small PON results
+      document.querySelector('#sm_resultsCard .card-title').textContent = currentLang === 'en' ? 'Calculation Results' : '计算结果';
+      
+      // Update page footers
+      const pageFooters = document.querySelectorAll('.page-footer');
+      pageFooters[0].textContent = currentLang === 'en' ? '© 2026 Campus Network Optical Power Calculator V2.1' : '© 2026 园区光网络光功率计算器 V2.1';
+      pageFooters[1].textContent = currentLang === 'en' ? '© 2026 Small Campus FTTR Optical Power Calculator V2.0' : '© 2026 小全光网络光功率计算器 V2.0';
+      
+      // Update button groups
+      const cnBtns = document.querySelectorAll('#campusPage .btn-group .btn-calc, #campusPage .btn-group .btn-secondary, #campusPage .btn-group .btn-help');
+      cnBtns[0].textContent = t('calculate');
+      cnBtns[1].textContent = t('reset');
+      cnBtns[2].textContent = t('help');
+    }
+
     // ============================================
     // Navigation
     // ============================================
@@ -1060,6 +1504,15 @@
       cn_onNetworkTypeChange();
     }
     
+    // Initialize language from saved preference
+    function initLanguage() {
+      const savedLang = localStorage.getItem('ponCalcLang');
+      if (savedLang) {
+        currentLang = savedLang;
+      }
+      setLanguage(currentLang);
+    }
+    
     function cn_loadUserModules() {
       try {
         const saved = localStorage.getItem('campusCalcUserData');
@@ -1226,65 +1679,66 @@
       const CRITICAL_THRESHOLD = 1.0;
       let uplinkStatus = 'normal', downlinkStatus = 'normal';
       const uplinkLines = [], downlinkLines = [];
+      const isEn = currentLang === 'en';
       
       if (oltRxAvg > olt.sat_power) {
         uplinkStatus = 'fail';
-        uplinkLines.push({ text: `[上行] OLT侧接收功率 ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
-        uplinkLines.push({ text: `  - 接收值 > 饱和功率 (${olt.sat_power} dBm)`, class: '' });
-        uplinkLines.push({ text: `  - 结论: 光功率不合格`, class: 'fail' });
+        uplinkLines.push({ text: `[${isEn ? 'Uplink' : '上行'}] ${isEn ? 'OLT Rx Power' : 'OLT侧接收功率'} ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
+        uplinkLines.push({ text: `  - ${isEn ? 'Value > Saturation Power' : '接收值 > 饱和功率'} (${olt.sat_power} dBm)`, class: '' });
+        uplinkLines.push({ text: `  - ${isEn ? 'Conclusion: Optical power not qualified' : '结论: 光功率不合格'}`, class: 'fail' });
       } else if (oltRxAvg < olt.rx_sens) {
         uplinkStatus = 'fail';
-        uplinkLines.push({ text: `[上行] OLT侧接收功率 ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
-        uplinkLines.push({ text: `  - 接收值 < 灵敏度 (${olt.rx_sens} dBm)`, class: '' });
-        uplinkLines.push({ text: `  - 结论: 光功率不合格`, class: 'fail' });
+        uplinkLines.push({ text: `[${isEn ? 'Uplink' : '上行'}] ${isEn ? 'OLT Rx Power' : 'OLT侧接收功率'} ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
+        uplinkLines.push({ text: `  - ${isEn ? 'Value < Sensitivity' : '接收值 < 灵敏度'} (${olt.rx_sens} dBm)`, class: '' });
+        uplinkLines.push({ text: `  - ${isEn ? 'Conclusion: Optical power not qualified' : '结论: 光功率不合格'}`, class: 'fail' });
       } else if (oltRxAvg - olt.rx_sens < CRITICAL_THRESHOLD) {
         uplinkStatus = 'warn';
-        uplinkLines.push({ text: `[上行] OLT侧接收功率 ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
-        uplinkLines.push({ text: `  - 警告: 余量不足 (余量: ${(oltRxAvg - olt.rx_sens).toFixed(2)} dB < ${CRITICAL_THRESHOLD} dB)`, class: 'warn' });
-        uplinkLines.push({ text: `  - 建议: 增加光功率预算`, class: 'warn' });
+        uplinkLines.push({ text: `[${isEn ? 'Uplink' : '上行'}] ${isEn ? 'OLT Rx Power' : 'OLT侧接收功率'} ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
+        uplinkLines.push({ text: `  - ${isEn ? 'Warning: Margin insufficient' : '警告: 余量不足'} (${isEn ? 'Margin' : '余量'}: ${(oltRxAvg - olt.rx_sens).toFixed(2)} dB < ${CRITICAL_THRESHOLD} dB)`, class: 'warn' });
+        uplinkLines.push({ text: `  - ${isEn ? 'Recommend: Increase power budget' : '建议: 增加光功率预算'}`, class: 'warn' });
       } else {
         uplinkStatus = 'pass';
-        uplinkLines.push({ text: `[上行] OLT侧接收功率 ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
-        uplinkLines.push({ text: `  - 接收值在正常范围内`, class: 'pass' });
-        uplinkLines.push({ text: `  - 结论: 光功率合格 (余量: ${(oltRxAvg - olt.rx_sens).toFixed(2)} dB)`, class: 'pass' });
+        uplinkLines.push({ text: `[${isEn ? 'Uplink' : '上行'}] ${isEn ? 'OLT Rx Power' : 'OLT侧接收功率'} ${oltRxAvg.toFixed(2)} dBm (${oltRxMin.toFixed(2)}~${oltRxMax.toFixed(2)})`, class: '' });
+        uplinkLines.push({ text: `  - ${isEn ? 'Value within normal range' : '接收值在正常范围内'}`, class: 'pass' });
+        uplinkLines.push({ text: `  - ${isEn ? 'Conclusion: Optical power qualified' : '结论: 光功率合格'} (${isEn ? 'Margin' : '余量'}: ${(oltRxAvg - olt.rx_sens).toFixed(2)} dB)`, class: 'pass' });
       }
       
       if (onuRxAvg > onu.sat_power) {
         downlinkStatus = 'fail';
-        downlinkLines.push({ text: `[下行] ONU侧接收功率 ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
-        downlinkLines.push({ text: `  - 接收值 > 饱和功率 (${onu.sat_power} dBm)`, class: '' });
-        downlinkLines.push({ text: `  - 结论: 光功率不合格`, class: 'fail' });
+        downlinkLines.push({ text: `[${isEn ? 'Downlink' : '下行'}] ${isEn ? 'ONU Rx Power' : 'ONU侧接收功率'} ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
+        downlinkLines.push({ text: `  - ${isEn ? 'Value > Saturation Power' : '接收值 > 饱和功率'} (${onu.sat_power} dBm)`, class: '' });
+        downlinkLines.push({ text: `  - ${isEn ? 'Conclusion: Optical power not qualified' : '结论: 光功率不合格'}`, class: 'fail' });
       } else if (onuRxAvg < onu.rx_sens) {
         downlinkStatus = 'fail';
-        downlinkLines.push({ text: `[下行] ONU侧接收功率 ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
-        downlinkLines.push({ text: `  - 接收值 < 灵敏度 (${onu.rx_sens} dBm)`, class: '' });
-        downlinkLines.push({ text: `  - 结论: 光功率不合格`, class: 'fail' });
+        downlinkLines.push({ text: `[${isEn ? 'Downlink' : '下行'}] ${isEn ? 'ONU Rx Power' : 'ONU侧接收功率'} ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
+        downlinkLines.push({ text: `  - ${isEn ? 'Value < Sensitivity' : '接收值 < 灵敏度'} (${onu.rx_sens} dBm)`, class: '' });
+        downlinkLines.push({ text: `  - ${isEn ? 'Conclusion: Optical power not qualified' : '结论: 光功率不合格'}`, class: 'fail' });
       } else if (onuRxAvg - onu.rx_sens < CRITICAL_THRESHOLD) {
         downlinkStatus = 'warn';
-        downlinkLines.push({ text: `[下行] ONU侧接收功率 ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
-        downlinkLines.push({ text: `  - 警告: 余量不足 (余量: ${(onuRxAvg - onu.rx_sens).toFixed(2)} dB < ${CRITICAL_THRESHOLD} dB)`, class: 'warn' });
-        downlinkLines.push({ text: `  - 建议: 增加光功率预算`, class: 'warn' });
+        downlinkLines.push({ text: `[${isEn ? 'Downlink' : '下行'}] ${isEn ? 'ONU Rx Power' : 'ONU侧接收功率'} ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
+        downlinkLines.push({ text: `  - ${isEn ? 'Warning: Margin insufficient' : '警告: 余量不足'} (${isEn ? 'Margin' : '余量'}: ${(onuRxAvg - onu.rx_sens).toFixed(2)} dB < ${CRITICAL_THRESHOLD} dB)`, class: 'warn' });
+        downlinkLines.push({ text: `  - ${isEn ? 'Recommend: Increase power budget' : '建议: 增加光功率预算'}`, class: 'warn' });
       } else {
         downlinkStatus = 'pass';
-        downlinkLines.push({ text: `[下行] ONU侧接收功率 ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
-        downlinkLines.push({ text: `  - 接收值在正常范围内`, class: 'pass' });
-        downlinkLines.push({ text: `  - 结论: 光功率合格 (余量: ${(onuRxAvg - onu.rx_sens).toFixed(2)} dB)`, class: 'pass' });
+        downlinkLines.push({ text: `[${isEn ? 'Downlink' : '下行'}] ${isEn ? 'ONU Rx Power' : 'ONU侧接收功率'} ${onuRxAvg.toFixed(2)} dBm (${onuRxMin.toFixed(2)}~${onuRxMax.toFixed(2)})`, class: '' });
+        downlinkLines.push({ text: `  - ${isEn ? 'Value within normal range' : '接收值在正常范围内'}`, class: 'pass' });
+        downlinkLines.push({ text: `  - ${isEn ? 'Conclusion: Optical power qualified' : '结论: 光功率合格'} (${isEn ? 'Margin' : '余量'}: ${(onuRxAvg - onu.rx_sens).toFixed(2)} dB)`, class: 'pass' });
       }
       
       const overallStatus = (uplinkStatus === 'fail' || downlinkStatus === 'fail') ? 'fail' : 
                            (uplinkStatus === 'warn' || downlinkStatus === 'warn') ? 'warn' : 'pass';
       
-      let html = `<h4>功率判定 Power Judgment</h4>`;
+      let html = `<h4>${t('powerJudgment')}</h4>`;
       uplinkLines.forEach(line => { html += `<div class="judgment-line ${line.class}">${line.text}</div>`; });
       html += `<div style="height: 10px;"></div>`;
       downlinkLines.forEach(line => { html += `<div class="judgment-line ${line.class}">${line.text}</div>`; });
       html += `<div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #e5e7eb;">`;
       if (overallStatus === 'pass') {
-        html += `<div style="color: #065f46; font-weight: 600; font-size: 16px;">✓ 总体结论: 所有链路光功率合格</div>`;
+        html += `<div style="color: #065f46; font-weight: 600; font-size: 16px;">✓ ${isEn ? 'Overall Conclusion: All links optical power qualified' : '总体结论: 所有链路光功率合格'}</div>`;
       } else if (overallStatus === 'warn') {
-        html += `<div style="color: #92400e; font-weight: 600; font-size: 16px;">⚠ 总体结论: 链路余量不足，建议优化</div>`;
+        html += `<div style="color: #92400e; font-weight: 600; font-size: 16px;">⚠ ${isEn ? 'Overall Conclusion: Link margin insufficient, recommend optimization' : '总体结论: 链路余量不足，建议优化'}</div>`;
       } else {
-        html += `<div style="color: #991b1b; font-weight: 600; font-size: 16px;">✗ 总体结论: 存在不合格链路，请调整配置</div>`;
+        html += `<div style="color: #991b1b; font-weight: 600; font-size: 16px;">✗ ${isEn ? 'Overall Conclusion: Unqualified links detected, please adjust configuration' : '总体结论: 存在不合格链路，请调整配置'}</div>`;
       }
       html += `</div>`;
       document.getElementById('cn_judgmentResult').innerHTML = html;
@@ -1306,25 +1760,27 @@
     }
     
     function cn_showHelp() {
+      const isEn = currentLang === 'en';
+      document.getElementById('helpModalTitle').textContent = t('helpTitle');
       document.getElementById('helpContent').innerHTML = `
-        <h4>【功能说明】</h4>
-        <p>本工具用于计算园区网络PON光功率预算，判断链路配置是否满足光功率要求。</p>
-        <h4>【计算公式】</h4>
-        <pre>总损耗 = OLT→分光器光纤损耗 + 分光器损耗 + 分光器→ONU光纤损耗 
-      + 衰减器 + 熔接损耗 + 连接器损耗
+        <h4>${isEn ? 'Feature Description' : '【功能说明】'}</h4>
+        <p>${isEn ? 'This tool calculates PON optical power budget for campus networks and determines if link configuration meets optical power requirements.' : '本工具用于计算园区网络PON光功率预算，判断链路配置是否满足光功率要求。'}</p>
+        <h4>${isEn ? 'Calculation Formula' : '【计算公式】'}</h4>
+        <pre>${isEn ? 'Total Loss = OLT→Splitter Fiber Loss + Splitter Loss + Splitter→ONU Fiber Loss' : '总损耗 = OLT→分光器光纤损耗 + 分光器损耗 + 分光器→ONU光纤损耗'}
+      ${isEn ? '+ Attenuator + Fusion Loss + Connector Loss' : '+ 衰减器 + 熔接损耗 + 连接器损耗'}
 
-OLT侧接收功率 = ONU发送功率 - 总损耗
-ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
-        <h4>【参数说明】</h4>
+${isEn ? 'OLT Rx Power = ONU TX Power - Total Loss' : 'OLT侧接收功率 = ONU发送功率 - 总损耗'}
+${isEn ? 'ONU Rx Power = OLT TX Power - Total Loss' : 'ONU侧接收功率 = OLT发送功率 - 总损耗'}</pre>
+        <h4>${isEn ? 'Parameter Description' : '【参数说明】'}</h4>
         <ul>
-          <li><strong>光纤损耗</strong>: 标准0.04dB/km</li>
-          <li><strong>分光损耗</strong>: 1x2=3.8dB, 1x4=7.1dB, 1x8=10.2dB, 1x16=13.5dB, 1x32=16.6dB, 1x64=20.1dB</li>
-          <li><strong>熔接损耗</strong>: 每个熔接点约0.04dB</li>
-          <li><strong>连接器损耗</strong>: UPC型0.1dB/个, APC型0.2dB/个</li>
+          <li><strong>${isEn ? 'Fiber Loss' : '光纤损耗'}</strong>: ${isEn ? 'Standard 0.04 dB/km' : '标准0.04dB/km'}</li>
+          <li><strong>${isEn ? 'Splitter Loss' : '分光损耗'}</strong>: 1x2=3.8dB, 1x4=7.1dB, 1x8=10.2dB, 1x16=13.5dB, 1x32=16.6dB, 1x64=20.1dB</li>
+          <li><strong>${isEn ? 'Fusion Loss' : '熔接损耗'}</strong>: ${isEn ? 'Approximately 0.04 dB per splice point' : '每个熔接点约0.04dB'}</li>
+          <li><strong>${isEn ? 'Connector Loss' : '连接器损耗'}</strong>: ${isEn ? 'UPC type 0.1 dB/pc, APC type 0.2 dB/pc' : 'UPC型0.1dB/个, APC型0.2dB/个'}</li>
         </ul>
-        <h4>【合格标准】</h4>
-        <pre>接收灵敏度 + 1dB &lt; 接收光功率 &lt; 饱和功率</pre>
-        <p>余量小于1dB时会显示警告，建议增加光功率预算。</p>
+        <h4>${isEn ? 'Pass Criteria' : '【合格标准】'}</h4>
+        <pre>${isEn ? 'Rx Sensitivity + 1dB < Rx Power < Saturation Power' : '接收灵敏度 + 1dB < 接收光功率 < 饱和功率'}</pre>
+        <p>${isEn ? 'Warning will show when margin is less than 1 dB, recommend increasing power budget.' : '余量小于1dB时会显示警告，建议增加光功率预算。'}</p>
       `;
       document.getElementById('helpModal').classList.add('active');
     }
@@ -1334,6 +1790,7 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
     // ============================================
     
     function openOLTManager() {
+      const isEn = currentLang === 'en';
       const listDiv = document.getElementById('oltModuleList');
       let html = '';
       for (const type of CN_NETWORK_TYPES) {
@@ -1354,7 +1811,20 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
           </div>`;
         }
       }
-      listDiv.innerHTML = html || '<div style="padding: 20px; text-align: center; color: #9ca3af;">暂无用户自定义模块</div>';
+      listDiv.innerHTML = html || `<div style="padding: 20px; text-align: center; color: #9ca3af;">${isEn ? 'No user-defined modules' : '暂无用户自定义模块'}</div>`;
+      
+      // Update modal content
+      document.querySelector('#oltModal .modal-header h2').textContent = t('oltManagerTitle');
+      document.querySelector('#oltModal .manager-section h3').textContent = t('allModules');
+      document.querySelector('#oltModal .manager-section .tip').textContent = `${t('systemModules')} | ${t('userModules')}`;
+      document.querySelectorAll('#oltModal .manager-section')[1].querySelector('h3').textContent = t('addEditDevice');
+      document.querySelector('#oltModal label[for="addOltNetType"]').textContent = t('networkType') + ':';
+      document.querySelector('#oltModal label[for="addOltName"]').textContent = t('deviceName') + ':';
+      document.querySelector('#oltModal label[for="addOltCode"]').textContent = t('materialCode') + ':';
+      document.querySelector('#oltModal .note-box').textContent = t('note');
+      document.querySelector('#oltModal .btn-success').textContent = t('addDevice');
+      document.querySelector('#oltModal .modal-footer .btn-secondary').textContent = t('close');
+      
       document.getElementById('oltModal').classList.add('active');
     }
     
@@ -1383,9 +1853,10 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
       const txMin = parseFloat(document.getElementById('addOltTxMin').value);
       const rxSen = parseFloat(document.getElementById('addOltRxSen').value);
       const sat = parseFloat(document.getElementById('addOltSat').value);
+      const isEn = currentLang === 'en';
       
       if (!name || !code || isNaN(txMax) || isNaN(txMin) || isNaN(rxSen) || isNaN(sat)) {
-        alert('请填写所有必填字段');
+        alert(t('fillAllFields'));
         return;
       }
       
@@ -1394,7 +1865,7 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
         for (const type in CN_OLT_MODULES) {
           if (CN_OLT_MODULES[type].includes(name)) { isSystem = true; break; }
         }
-        if (isSystem) { alert(`系统模块 '${name}' 无法修改`); return; }
+        if (isSystem) { alert(`${t('systemModule')} '${name}' ${t('cannotModify')}`); return; }
         CN_OLT_PARAMS[name] = { tx_max: txMax, tx_min: txMin, rx_sens: rxSen, sat_power: sat, code };
       } else {
         CN_OLT_PARAMS[name] = { tx_max: txMax, tx_min: txMin, rx_sens: rxSen, sat_power: sat, code };
@@ -1405,10 +1876,11 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
       cn_saveUserModules();
       cn_onNetworkTypeChange();
       openOLTManager();
-      alert(`设备 '${name}' 添加成功！`);
+      alert(`${isEn ? 'Device' : '设备'} '${name}' ${t('deviceAdded')}`);
     }
     
     function openONUManager() {
+      const isEn = currentLang === 'en';
       const listDiv = document.getElementById('onuModuleList');
       let html = '';
       for (const type of CN_NETWORK_TYPES) {
@@ -1429,7 +1901,20 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
           </div>`;
         }
       }
-      listDiv.innerHTML = html || '<div style="padding: 20px; text-align: center; color: #9ca3af;">暂无用户自定义设备</div>';
+      listDiv.innerHTML = html || `<div style="padding: 20px; text-align: center; color: #9ca3af;">${isEn ? 'No user-defined devices' : '暂无用户自定义设备'}</div>`;
+      
+      // Update modal content
+      document.querySelector('#onuModal .modal-header h2').textContent = t('onuManagerTitle');
+      document.querySelector('#onuModal .manager-section h3').textContent = t('allModules');
+      document.querySelector('#onuModal .manager-section .tip').textContent = `${t('systemDevices')} | ${t('userDevices')}`;
+      document.querySelectorAll('#onuModal .manager-section')[1].querySelector('h3').textContent = t('addEditDevice');
+      document.querySelector('#onuModal label[for="addOnuNetType"]').textContent = t('networkType') + ':';
+      document.querySelector('#onuModal label[for="addOnuName"]').textContent = t('deviceName') + ':';
+      document.querySelector('#onuModal label[for="addOnuCode"]').textContent = t('materialCode') + ':';
+      document.querySelector('#onuModal .note-box').textContent = t('note');
+      document.querySelector('#onuModal .btn-success').textContent = t('addDevice');
+      document.querySelector('#onuModal .modal-footer .btn-secondary').textContent = t('close');
+      
       document.getElementById('onuModal').classList.add('active');
     }
     
@@ -1458,9 +1943,10 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
       const txMin = parseFloat(document.getElementById('addOnuTxMin').value);
       const rxSen = parseFloat(document.getElementById('addOnuRxSen').value);
       const sat = parseFloat(document.getElementById('addOnuSat').value);
+      const isEn = currentLang === 'en';
       
       if (!name || !code || isNaN(txMax) || isNaN(txMin) || isNaN(rxSen) || isNaN(sat)) {
-        alert('请填写所有必填字段');
+        alert(t('fillAllFields'));
         return;
       }
       
@@ -1469,7 +1955,7 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
         for (const type in CN_ONU_MODULES) {
           if (CN_ONU_MODULES[type].includes(name)) { isSystem = true; break; }
         }
-        if (isSystem) { alert(`系统设备 '${name}' 无法修改`); return; }
+        if (isSystem) { alert(`${isEn ? 'System device' : '系统设备'} '${name}' ${t('cannotModify')}`); return; }
         CN_ONU_PARAMS[name] = { tx_max: txMax, tx_min: txMin, rx_sens: rxSen, sat_power: sat, code };
       } else {
         CN_ONU_PARAMS[name] = { tx_max: txMax, tx_min: txMin, rx_sens: rxSen, sat_power: sat, code };
@@ -1480,7 +1966,7 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
       cn_saveUserModules();
       cn_onNetworkTypeChange();
       openONUManager();
-      alert(`设备 '${name}' 添加成功！`);
+      alert(`${isEn ? 'Device' : '设备'} '${name}' ${t('deviceAdded')}`);
     }
 
     // ============================================
@@ -1585,6 +2071,7 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
       let currentUpPower = gwTxPower, prevCascadeLoss = 0, prevDirectLoss = 0;
       const results = [];
       let allPassed = true, anySplitter = false;
+      const isEn = currentLang === 'en';
       
       for (const levelData of sm_splitterLevels) {
         const selector = document.getElementById(levelData.selector);
@@ -1601,7 +2088,7 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
         document.getElementById(levelData.upLabel).textContent = `${upPower.toFixed(2)} dBm`;
         document.getElementById(levelData.rxLabel).textContent = `${rxPower.toFixed(2)} dBm`;
         let passed = minAcceptable <= rxPower && rxPower <= maxAcceptable;
-        document.getElementById(levelData.statusLabel).innerHTML = `<span class="${passed ? 'status-pass' : 'status-fail'}">${passed ? '合格' : '不合格'}</span>`;
+        document.getElementById(levelData.statusLabel).innerHTML = `<span class="${passed ? 'status-pass' : 'status-fail'}">${passed ? (isEn ? 'PASS' : '合格') : (isEn ? 'FAIL' : '不合格')}</span>`;
         results.push({ level: levelData.level, splitter: splitterName, upPower, rxPower, passed });
         if (!passed) allPassed = false;
         currentUpPower = upPower; prevDirectLoss = directLoss; prevCascadeLoss = cascadeLoss;
@@ -1612,21 +2099,21 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
       const summaryBox = document.getElementById('sm_summaryBox');
       resultsCard.style.display = 'block';
       if (results.length > 0) {
-        resultsGrid.innerHTML = results.map(r => `<div class="result-card"><h4>第${r.level}级 - ${r.splitter}</h4><div class="value ${r.passed ? 'success' : 'danger'}">${r.rxPower.toFixed(2)} dBm</div><div class="range">${r.passed ? '✓ 合格' : '✗ 不合格'}</div></div>`).join('');
+        resultsGrid.innerHTML = results.map(r => `<div class="result-card"><h4>${isEn ? 'Level' : '第'}${r.level} ${isEn ? '' : '级'} - ${r.splitter}</h4><div class="value ${r.passed ? 'success' : 'danger'}">${r.rxPower.toFixed(2)} dBm</div><div class="range">${r.passed ? (isEn ? '✓ PASS' : '✓ 合格') : (isEn ? '✗ FAIL' : '✗ 不合格')}</div></div>`).join('');
       } else {
-        resultsGrid.innerHTML = '<p style="text-align: center; color: #94a3b8;">暂无计算结果</p>';
+        resultsGrid.innerHTML = `<p style="text-align: center; color: #94a3b8;">${isEn ? 'No calculation results' : '暂无计算结果'}</p>`;
       }
       if (!anySplitter) {
         summaryBox.className = 'summary-box pending';
-        document.getElementById('sm_summaryTitle').textContent = '请至少选择一个分光器';
+        document.getElementById('sm_summaryTitle').textContent = isEn ? 'Please select at least one splitter' : '请至少选择一个分光器';
       } else if (allPassed) {
         summaryBox.className = 'summary-box pass';
-        document.getElementById('sm_summaryTitle').textContent = '✓ 所有分光级别光功率均达标！';
+        document.getElementById('sm_summaryTitle').textContent = isEn ? '✓ All splitter levels optical power qualified!' : '✓ 所有分光级别光功率均达标！';
       } else {
         summaryBox.className = 'summary-box fail';
-        document.getElementById('sm_summaryTitle').textContent = '✗ 部分分光级别光功率不达标';
+        document.getElementById('sm_summaryTitle').textContent = isEn ? '✗ Some splitter levels optical power not qualified' : '✗ 部分分光级别光功率不达标';
       }
-      document.getElementById('sm_summaryText').textContent = `合格范围: ${minAcceptable.toFixed(0)} ~ ${maxAcceptable.toFixed(0)} dBm`;
+      document.getElementById('sm_summaryText').textContent = `${isEn ? 'Acceptable Range' : '合格范围'}: ${minAcceptable.toFixed(0)} ~ ${maxAcceptable.toFixed(0)} dBm`;
       resultsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
@@ -1640,21 +2127,23 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
     }
     
     function sm_showHelp() {
+      const isEn = currentLang === 'en';
+      document.getElementById('helpModalTitle').textContent = t('helpTitle');
       document.getElementById('helpContent').innerHTML = `
-        <h4>【功能说明】</h4>
-        <p>本工具用于计算小全光网络的光功率预算，判断组网配置是否满足光功率要求。</p>
-        <h4>【计算模型】</h4>
-        <p><strong>一级分光:</strong></p>
-        <pre>上行光功率 = 光网关发送功率
-接收光功率 = 上行光功率 - 直连损耗 - 1dB</pre>
-        <p><strong>二级及后续分光:</strong></p>
-        <pre>上行光功率 = 上一级上行光功率 - (级联损耗=0 ? 直连损耗 : 级联损耗)
-接收光功率 = 上行光功率 - 直连损耗 - 1dB</pre>
-        <h4>【分光器说明】</h4>
-        <p><strong>无源分光器 (OSPL系列):</strong> 级联损耗=0，支持1x2~1x64</p>
-        <p><strong>有源分光器 (UFD系列):</strong> 级联损耗>0，可多级级联</p>
-        <h4>【合格标准】</h4>
-        <pre>接收灵敏度 + 2dB &lt; 接收光功率 &lt; 过载功率 - 2dB</pre>
+        <h4>${isEn ? 'Feature Description' : '【功能说明】'}</h4>
+        <p>${isEn ? 'This tool calculates optical power budget for small campus FTTR networks and determines if network configuration meets optical power requirements.' : '本工具用于计算小全光网络的光功率预算，判断组网配置是否满足光功率要求。'}</p>
+        <h4>${isEn ? 'Calculation Model' : '【计算模型】'}</h4>
+        <p><strong>${isEn ? 'Level 1 Split:' : '一级分光:'}</strong></p>
+        <pre>${isEn ? 'Uplink Power = Gateway TX Power' : '上行光功率 = 光网关发送功率'}
+${isEn ? 'Rx Power = Uplink Power - Direct Loss - 1dB' : '接收光功率 = 上行光功率 - 直连损耗 - 1dB'}</pre>
+        <p><strong>${isEn ? 'Level 2+ Split:' : '二级及后续分光:'}</strong></p>
+        <pre>${isEn ? 'Uplink Power = Previous Level Uplink - (Cascade Loss=0 ? Direct Loss : Cascade Loss)' : '上行光功率 = 上一级上行 - (级联损耗=0 ? 直连损耗 : 级联损耗)'}
+${isEn ? 'Rx Power = Uplink Power - Direct Loss - 1dB' : '接收光功率 = 上行光功率 - 直连损耗 - 1dB'}</pre>
+        <h4>${isEn ? 'Splitter Notes' : '【分光器说明】'}</h4>
+        <p><strong>${isEn ? 'Passive Splitter (OSPL series)' : '无源分光器 (OSPL系列)'}:</strong> ${isEn ? 'Cascade loss=0, supports 1x2~1x64' : '级联损耗=0，支持1x2~1x64'}</p>
+        <p><strong>${isEn ? 'Active Splitter (UFD series)' : '有源分光器 (UFD系列)'}:</strong> ${isEn ? 'Cascade loss>0, supports multi-level cascading' : '级联损耗>0，可多级级联'}</p>
+        <h4>${isEn ? 'Pass Criteria' : '【合格标准】'}</h4>
+        <pre>${isEn ? 'Rx Sensitivity + 2dB < Rx Power < Overload Power - 2dB' : '接收灵敏度 + 2dB < 接收光功率 < 过载功率 - 2dB'}</pre>
       `;
       document.getElementById('helpModal').classList.add('active');
     }
@@ -1665,6 +2154,11 @@ ONU侧接收功率 = OLT发送功率 - 总损耗</pre>
     
     function closeHelp() { document.getElementById('helpModal').classList.remove('active'); }
     document.getElementById('helpModal').addEventListener('click', function(e) { if (e.target === this) closeHelp(); });
+    
+    // Initialize language on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      initLanguage();
+    });
   </script>
 </body>
 </html>
